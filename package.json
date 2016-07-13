@@ -1,0 +1,19 @@
+{
+  "name": "tl-dr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-summary": "^1.1.0",
+    "node-sumuparticles": "^0.1.4",
+    "node-tldr": "^0.4.14",
+    "sum": "^0.1.4",
+    "textrank-node": "^0.1.9"
+  }
+}
