@@ -13,16 +13,13 @@ router.post('/', function(req, res) {
   console.log('post route hit');
   console.log('calling summary on this url: ');
   console.log(req.body.url);
-  var results;
   var url = req.body.url;
   summary.summarize(url, function(result, failure) {
     if (failure) {
         console.log("An error occured! " + result.error);
     }
-    deepPrint(result);
+    // deepPrint(result);
     res.json(result);
-    // results = result;
-    // console.log("#### " + result.title);
   });
   
 });

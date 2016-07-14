@@ -1,5 +1,5 @@
 function setDictObjs(dictionary) {
-  let tmp = _.mapObject(dictionary, function(val, key) {
+  let tmp = _.mapObject(dictionary, (val, key) => {
     return({
       'sentence': key,
       'score': val
@@ -10,7 +10,7 @@ function setDictObjs(dictionary) {
 
 function createArray(dictionary) {
   let tmp = [];
-  _.each(dictionary, function(obj){
+  _.each(dictionary, (obj) => {
     tmp.push(obj);
   });
   return tmp;
@@ -18,9 +18,9 @@ function createArray(dictionary) {
 
 function normalize(dictionary) {
   let min, max = 0;
-  max = _.max(dictionary, function(sent){ return sent.score }).score;
-  min = _.min(dictionary, function(sent){ return sent.score }).score;
-  let normalized = _.map(dictionary, function(obj){
+  max = _.max(dictionary, (sent) => { return sent.score }).score;
+  min = _.min(dictionary, (sent) => { return sent.score }).score;
+  let normalized = _.map(dictionary, (obj) => {
     let norm = ((obj['score'] - min) / (max - min));
     let normScore = { 'normScore': norm };
     return _.extend(obj, normScore);
@@ -41,8 +41,10 @@ class SummarySearch extends React.Component {
   constructor() {
     super();
     this.state = { 
-      dict: []
+      dict: [],
+      threshold: 0
     };
+    // this.handleThresholdChange = this.handleThresholdChange.bind(this);
   }
 
   getSummary(url) {
@@ -50,16 +52,22 @@ class SummarySearch extends React.Component {
       url: '/summarize',
       method: 'POST',
       data: { url: url },
-      success: function(data){
+      success: (data) => {
         let dictionary = createArray(setDictObjs(data.dictionary));
         let norm = normalize(dictionary);
         // console.log(norm);
         this.setState({ dict: norm });
       }.bind(this),
-      error: function(xhr, status, err){
+      error: (xhr, status, err) => {
         console.error(status, err.toString());
       }.bind(this)
     });
+  }
+
+  handleThresholdChange(num) {
+    // this.setState({ 
+    //   threshold: num
+    // });
   }
 
   render() {
@@ -70,6 +78,7 @@ class SummarySearch extends React.Component {
         />
         <SummaryDisplay
           dict={this.state.dict}
+          threshold={this.handleThresholdChange}
         />
       </div>
     );
@@ -126,10 +135,11 @@ class UrlSearch extends React.Component {
 
 class SummaryDisplay extends React.Component {
   render() {
-    let filtered = _.filter(this.props.dict, function(obj) {
+    let filtered = _.filter(this.props.dict, (obj) => {
       return obj['normScore'] >= 0.5;
     });
-    let sentences = _.map(filtered, function(obj) {
+    
+    let sentences = _.map(filtered, (obj) => {
       return(
         <span 
           // key={} 
@@ -140,6 +150,7 @@ class SummaryDisplay extends React.Component {
         </span>
       );
     });
+
     return(
       <div>
         <div>
@@ -150,7 +161,7 @@ class SummaryDisplay extends React.Component {
           min="0" 
           max="1" 
           step=".1" 
-          // onInput={} 
+          // onInput={this.props.threshold(this.value).bind(this)} 
         />
       </div>
     );
