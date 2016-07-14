@@ -24,7 +24,7 @@ class SummarySearch extends React.Component {
           o[i] = data.dictionary[i];
           dictionary.push(o);
         }
-        console.log(dictionary);
+        // console.log(dictionary);
         this.setState({ dict: dictionary });
       }.bind(this),
       error: function(xhr, status, err){
@@ -97,8 +97,17 @@ class UrlSearch extends React.Component {
 
 class SummaryDisplay extends React.Component {
   render() {
+    var sentences = this.props.dict.map(function(sentence) {
+      for(var i in sentence) {
+        return(
+          <span id={sentence[i]}>{i}</span>
+        );
+      }
+    });
+
     return(
       <div>
+        {sentences}
       </div>
     );
   }
