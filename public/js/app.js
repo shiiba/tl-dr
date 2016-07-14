@@ -44,7 +44,7 @@ class SummarySearch extends React.Component {
       dict: [],
       threshold: 0
     };
-    // this.handleThresholdChange = this.handleThresholdChange.bind(this);
+    this.handleThresholdChange = this.handleThresholdChange.bind(this);
   }
 
   getSummary(url) {
@@ -65,9 +65,11 @@ class SummarySearch extends React.Component {
   }
 
   handleThresholdChange(num) {
-    // this.setState({ 
-    //   threshold: num
-    // });
+    console.log('threshold changing: ' + num);
+    console.log(this.state);
+    this.setState({ 
+      threshold: num
+    })
   }
 
   render() {
@@ -134,6 +136,12 @@ class UrlSearch extends React.Component {
 }
 
 class SummaryDisplay extends React.Component {
+  handleSlider(e) {
+    console.log('threshold in child component: ' + e.target.value);
+    console.log(this.props);
+    this.props.threshold(e.target.value);
+  }
+
   render() {
     let filtered = _.filter(this.props.dict, (obj) => {
       return obj['normScore'] >= 0.5;
@@ -160,8 +168,8 @@ class SummaryDisplay extends React.Component {
           type="range" 
           min="0" 
           max="1" 
-          step=".1" 
-          // onInput={this.props.threshold(this.value).bind(this)} 
+          step=".05" 
+          onInput={this.handleSlider.bind(this)} 
         />
       </div>
     );
