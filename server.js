@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 var mongoose = require('mongoose');
+// var _ = require('underscore')._;
 // var browserify = require('browserify');
 var ejs = require('ejs');
 var port = process.env.PORT || 3000;

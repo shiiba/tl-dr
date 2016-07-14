@@ -20,7 +20,11 @@
     "node-summary": "^1.1.0",
     "node-sumuparticles": "^0.1.4",
     "node-tldr": "^0.4.14",
+    "path": "^0.12.7",
     "sum": "^0.1.4",
-    "textrank-node": "^0.1.9"
+    "textrank-node": "^0.1.9",
+    "underscore": "^1.8.3",
+    "webpack": "^1.13.1",
+    "webpack-dev-middleware": "^1.6.1"
   }
 }
