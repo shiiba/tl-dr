@@ -9,7 +9,7 @@ class Application extends React.Component {
 class SummarySearch extends React.Component {
   constructor() {
     super();
-    this.state = { dict: [] }
+    this.state = { dict: [] };
   }
 
   getSummary(url) {
@@ -18,8 +18,14 @@ class SummarySearch extends React.Component {
       method: 'POST',
       data: { url: url },
       success: function(data){
-        console.log(data);
-        // this.setState({ dict: data });
+        var dictionary = []
+        for(let i in data.dictionary) {
+          let o = {};
+          o[i] = data.dictionary[i];
+          dictionary.push(o);
+        }
+        console.log(dictionary);
+        this.setState({ dict: dictionary });
       }.bind(this),
       error: function(xhr, status, err){
         console.error(status, err.toString());
