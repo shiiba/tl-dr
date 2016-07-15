@@ -33,28 +33,58 @@ function normalize(dictionary) {
   return normalized;
 };
 
+function cookieCheck(name) {
+  window.getCookie = (name) => {
+    match = document.cookie.match(new RegExp(name + '=([^;]+)'));
+    if (match) return true;
+  }
+}
+
 class Application extends React.Component {
   constructor() {
     super();
     this.state = { 
-      authenticatedUser: document.cookie ? true : ''
+      authenticatedUser: '',
+      pocketAuth: false
     };
   }
 
+  // TRYING TO: get the state to check for cookies, and then render correctly with the right state
+  // Also trying to get the button to redirect to the page and pass down props so that the connect doesn't work
+
+  componentWillMount() {
+    this.setState({
+      console.log(cookieCheck("jwt_token"));
+      console.log(cookieCheck("connect.sid"));
+      authenticatedUser: cookieCheck("jwt_token") ? true : '',
+      pocketAuth: cookieCheck("connect.sid") ? true : false
+    })
+  }
+
   changeLogin() {
-    console.log('changelogin');
+    console.log('change login');
     this.setState({ authenticatedUser: true });
   }
 
+  changePocket() {
+    console.log('change pocketAuth');
+    this.setState({ pocketAuth: !pocketAuth });
+  }
+
   handleReset() {
-    this.setState({ authenticatedUser: '' });
+    this.setState({ 
+      authenticatedUser: '',
+      pocketAuth: false
+    });
   }
 
   render() {
     if(this.state.authenticatedUser === true) {
       return(
         <div className="logged-in">
-          <SummarySearch />
+          <SummarySearch 
+            changePocket={this.changePocket.bind(this)}
+          />
         </div>
       );
     } else {
@@ -75,7 +105,6 @@ class Application extends React.Component {
               </div>
               <div className="login">
                 <LoginForm 
-                  // initialLoginCheck={this.state.authenticatedUser} 
                   changeLogin={this.changeLogin.bind(this)}
                 />
               </div>
@@ -121,12 +150,14 @@ class SummarySearch extends React.Component {
       threshold: num
     })
   }
-
   render() {
     return(
       <div>
         <UrlSearch 
           summaryCall={this.getSummary.bind(this)}
+        />
+        <PocketAuthBtn 
+          changePocket={this.props.changePocket.bind(this)}
         />
         <SummaryDisplay
           dict={this.state.dict}
@@ -195,7 +226,7 @@ class SummaryDisplay extends React.Component {
 
   render() {
     let filtered = _.filter(this.props.dict, (obj) => {
-      return obj['normScore'] >= this.props.threshold;
+      return obj['normScore'] <= this.props.threshold;
     });
     
     let sentences = _.map(filtered, (obj) => {
@@ -229,6 +260,31 @@ class SummaryDisplay extends React.Component {
             className="slider"
           />
         </div>
+      </div>
+    );
+  }
+};
+
+class PocketAuthBtn extends React.Component {
+  
+  pocketAuth() {
+    $.ajax({
+      url: '/auth/pocket',
+      method: 'GET',
+      success: (data) => {
+        console.log('successful get to pocket auth');
+      }.bind(this),
+      error: (xhr, status, err) => {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
+  }
+
+  render() {
+    return(
+      <div>
+        <span>Connect Your Pocket Account:</span>
+        <a href="./auth/pocket" className="button">Connect</a>
       </div>
     );
   }
