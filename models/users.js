@@ -6,6 +6,7 @@ var articleSchema = require('./articles.js').schema;
 var UserSchema = new mongoose.Schema({
   username: { type: String, unique: true, require: true },
   password: String,
+  pocketToken: String,
   articles: [articleSchema]
 });
 

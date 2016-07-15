@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 var mongoose = require('mongoose');
-var ejs = require('ejs');
+// var Promise = require("bluebird");
 var port = process.env.PORT || 3000;
 
 // middleware
@@ -22,6 +22,7 @@ app.use(methodOverride((req, res) => {
     return method;
   }
 }));
+// Promise.promisifyAll(require("mongoose"));
 
 // database
 var mongoUri = process.env.MONGODB_URI || "mongodb://localhost/tldr_dev";
@@ -36,9 +37,6 @@ app.use('/auth', authController);
 
 var summaryController = require('./controllers/summary.js');
 app.use('/summarize', summaryController);
-
-var extAuthController = require('./controllers/ext_auth.js');
-app.use('/auth', extAuthController);
 
 // listen
 app.listen(port);

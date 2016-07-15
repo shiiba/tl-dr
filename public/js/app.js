@@ -272,6 +272,7 @@ class LoginForm extends React.Component {
       success: function(data) {
         console.log('successful login ajax call');
         Cookies.set('jwt_token', data.token);
+        Cookies.set('userId', data.userId);
         console.log(data);
         this.props.changeLogin(data.token);
       }.bind(this),
@@ -373,6 +374,7 @@ class SignupForm extends React.Component {
         console.log('Token acquired.');
         console.log(data);
         Cookies.set('jwt_token', data.token);
+        Cookies.set('userId', data.userId);
         callback();
       }.bind(this),
       error: function(xhr, status, err) {
