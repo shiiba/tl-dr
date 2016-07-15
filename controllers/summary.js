@@ -8,7 +8,7 @@ function deepPrint(x){
 }
 
 router.post('/', function(req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   console.log('==============================');
   console.log('post route hit');
   console.log('calling summary on this url: ');

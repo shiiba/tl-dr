@@ -28,14 +28,13 @@ function normalize(dictionary) {
   return normalized;
 };
 
-
 class Application extends React.Component {
   render() {
     return(
       <SummarySearch />
     );
   }
-}
+};
 
 class SummarySearch extends React.Component {
   constructor() {
@@ -65,8 +64,8 @@ class SummarySearch extends React.Component {
   }
 
   handleThresholdChange(num) {
-    console.log('threshold changing: ' + num);
-    console.log(this.state);
+    // console.log('threshold changing: ' + num);
+    // console.log(this.state);
     this.setState({ 
       threshold: num
     })
@@ -80,12 +79,13 @@ class SummarySearch extends React.Component {
         />
         <SummaryDisplay
           dict={this.state.dict}
-          threshold={this.handleThresholdChange}
+          changeThresh={this.handleThresholdChange}
+          threshold={this.state.threshold}
         />
       </div>
     );
   }
-}
+};
 
 class UrlSearch extends React.Component {
   constructor() {
@@ -133,24 +133,23 @@ class UrlSearch extends React.Component {
       </div>
     );
   }
-}
+};
 
 class SummaryDisplay extends React.Component {
   handleSlider(e) {
     console.log('threshold in child component: ' + e.target.value);
-    console.log(this.props);
-    this.props.threshold(e.target.value);
+    // console.log(this.props);
+    this.props.changeThresh(e.target.value);
   }
 
   render() {
     let filtered = _.filter(this.props.dict, (obj) => {
-      return obj['normScore'] >= 0.5;
+      return obj['normScore'] >= this.props.threshold;
     });
     
     let sentences = _.map(filtered, (obj) => {
       return(
         <span 
-          // key={} 
           id={obj['score']}
           value={obj['normScore']}
         >
@@ -168,14 +167,14 @@ class SummaryDisplay extends React.Component {
           type="range" 
           min="0" 
           max="1" 
-          step=".05" 
+          step=".0001" 
           onInput={this.handleSlider.bind(this)} 
+          id="slider"
         />
       </div>
     );
   }
-}
-
+};
 
 ReactDOM.render(
   <div>
