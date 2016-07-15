@@ -16,12 +16,17 @@ function createArray(dictionary) {
   return tmp;
 };
 
-function normalize(dictionary) {
+function minAndMax(dictionary) {
   let min, max = 0;
   max = _.max(dictionary, (sent) => { return sent.score }).score;
   min = _.min(dictionary, (sent) => { return sent.score }).score;
+  return { max: max, min: min };
+}
+
+function normalize(dictionary) {
+  let minMax = minAndMax(dictionary);
   let normalized = _.map(dictionary, (obj) => {
-    let norm = ((obj['score'] - min) / (max - min));
+    let norm = ((obj['score'] - minMax.min) / (minMax.max - minMax.min));
     let normScore = { 'normScore': norm };
     return _.extend(obj, normScore);
   });

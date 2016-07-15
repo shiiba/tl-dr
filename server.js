@@ -33,6 +33,9 @@ app.use(methodOverride(function(req, res){
 var summaryController = require('./controllers/summary.js');
 app.use('/summarize', summaryController);
 
+var extAuthController = require('./controllers/ext_auth.js');
+app.use('/auth', extAuthController);
+
 // listen
 app.listen(port);
 console.log('==============');
