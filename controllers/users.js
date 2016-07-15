@@ -10,15 +10,15 @@ function deepPrint(x){
   console.log(util.inspect(x, {showHidden: false, depth: null}));
 }
 
-// ------------------------------
-// ROUTES THAT DON'T REQUIRE AUTH
-// ------------------------------
+// --------------------------
+// No Auth Routes
+// --------------------------
 
-// CREATE A NEW USER
+// create a new user
 
-router.post('/register', function(req, res){
+router.post('/register', (req, res) => {
   console.log('req.body: ' + req.body);
-  User.create(req.body, function(err, user){
+  User.create(req.body, (err, user) => {
     if(err){
       console.log(err);
       res.status(500).end();
@@ -27,11 +27,12 @@ router.post('/register', function(req, res){
   });
 });
 
-// -----------------------------------------------
-// ROUTES THAT REQUIRE AUTHENTICATION w/ JWT BELOW
-// -----------------------------------------------
+// --------------------------
+// Require JWT Token below
+// --------------------------
 router.use(passport.authenticate('jwt', { session: false }));
+
+// routes
 
 
 module.exports = router;
-

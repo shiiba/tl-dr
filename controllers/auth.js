@@ -7,9 +7,9 @@ var jwt = require('jsonwebtoken');
 // initialize passport
 router.use(passport.initialize());
 
-router.get('/', (req, res) => {
-  res.send('testing if the auth.js route works');
-});
+// router.get('/', (req, res) => {
+//   res.send('testing if the auth.js route works');
+// });
 
 // login post requtest, returning JWT Token on success
 router.post('/', passport.authenticate('local', { session: false }), (req, res, next) => {

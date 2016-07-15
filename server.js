@@ -6,8 +6,6 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 var mongoose = require('mongoose');
-// var _ = require('underscore')._;
-// var browserify = require('browserify');
 var ejs = require('ejs');
 var port = process.env.PORT || 3000;
 
@@ -17,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(cookieParser());
-app.use(methodOverride(function(req, res){
+app.use(methodOverride((req, res) => {
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {
     var method = req.body._method;
     delete req.body._method;
