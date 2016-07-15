@@ -34,10 +34,56 @@ function normalize(dictionary) {
 };
 
 class Application extends React.Component {
+  constructor() {
+    super();
+    this.state = { 
+      authenticatedUser: document.cookie ? true : ''
+    };
+  }
+
+  changeLogin() {
+    console.log('changelogin');
+    this.setState({ authenticatedUser: true });
+  }
+
+  handleReset() {
+    this.setState({ authenticatedUser: '' });
+  }
+
   render() {
-    return(
-      <SummarySearch />
-    );
+    if(this.state.authenticatedUser === true) {
+      return(
+        <div className="logged-in">
+          <SummarySearch />
+        </div>
+      );
+    } else {
+      return(
+        <div className="logged-out">
+          <div className="auth-container">
+            <nav>
+            Q
+            </nav>
+            <div className="title">
+              TL;DR
+            </div>
+            <div className="auth-forms">
+              <div className="signup"> 
+                <SignupForm 
+                  changeLogin={this.changeLogin.bind(this)}
+                />
+              </div>
+              <div className="login">
+                <LoginForm 
+                  // initialLoginCheck={this.state.authenticatedUser} 
+                  changeLogin={this.changeLogin.bind(this)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
 };
 
@@ -187,6 +233,192 @@ class SummaryDisplay extends React.Component {
     );
   }
 };
+
+class LoginForm extends React.Component {
+  constructor() {
+    super();
+    this.state = { 
+      username: '',
+      password: ''
+    };
+  }
+
+  handleLoginFormChange(stateName, e) {
+    let change = {};
+    change[stateName] = e.target.value;
+    this.setState(change);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    let username = this.state.username.trim();
+    let password = this.state.password.trim();
+    console.log('username: ' + username);
+    console.log('password: ' + password);
+    this.loginAJAX(username, password);
+  }
+
+  loginAJAX(username, password) {
+    console.log('login AJAX hit');
+    console.log(username);
+    console.log(password);
+    $.ajax({
+      url: "/auth",
+      method: "POST",
+      data: {
+        username: username,
+        password: password
+      },
+      success: function(data) {
+        console.log('successful login ajax call');
+        Cookies.set('jwt_token', data.token);
+        console.log(data);
+        this.props.changeLogin(data.token);
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this),
+    });
+  }
+
+  render() {
+    return(
+      <div className="login">
+        <div className="login-form" >
+          <h1>Please Login</h1>
+          <form onSubmit={this.handleSubmit.bind(this)}>
+            <label htmlFor="username" >
+              Username:
+            </label>
+            <br/>
+            <input 
+              className="username-login-form" 
+              type="text" 
+              value={this.state.username} 
+              onChange={this.handleLoginFormChange.bind(this, 'username')}
+            /><br/>
+            <label htmlFor="password">
+              Password:
+            </label>
+            <br/>
+            <input 
+              className="password-login-form" 
+              type="password" 
+              value={this.state.password} 
+              onChange={this.handleLoginFormChange.bind(this, 'password')}
+            /><br/>
+            <input
+              className="loginSubmit" 
+              type="submit"
+            />
+          </form>
+        </div>
+      </div>  
+    );
+  }
+}
+
+class SignupForm extends React.Component {
+  constructor() {
+    super();
+  }
+
+  handleSignupFormChange(setName, e) {
+    let change = {};
+    change[setName] = e.target.value
+    this.setState(change);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    let username = this.state.username.trim();
+    let password = this.state.password.trim();
+    this.signupAJAX(username, password);
+  }
+
+  signupAJAX(username, password) {
+    console.log('sending signup post request');
+    $.ajax({
+      url:'/users/register',
+      method: 'POST',
+      data: {
+        username: username,
+        password: password
+      },
+      success: function(data){
+        console.log("A new user signed up!");
+        console.log(data);
+        this.handleSignupAuthentication(username, password);
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
+  }
+
+  handleSignupAuthentication(username, password) {
+    var self = this;
+    var callback = function() {
+      self.props.changeLogin();
+    };
+    $.ajax({
+      url: '/auth',
+      method: 'POST',
+      data: {
+        username: username,
+        password: password
+      },
+      //if saved it console logs
+      success: function(data) {
+        console.log('Token acquired.');
+        console.log(data);
+        Cookies.set('jwt_token', data.token);
+        callback();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
+  }
+
+  render() {
+    return(
+      <div className="signup-form">
+        <h1> Create An Account </h1>
+        <form 
+          onSubmit={this.handleSubmit.bind(this)}
+        >
+          <label htmlFor="firstName"> 
+            First Name: 
+          </label>
+          <br/>
+          <label htmlFor="username"> 
+            Username: 
+          </label>
+          <br/>
+          <input 
+            className="username-create" 
+            type="text" 
+            onChange={this.handleSignupFormChange.bind(this,'username')}
+          /><br/>
+          <label htmlFor="password">
+              Password: 
+          </label>
+          <br/>
+          <input 
+            className="password-create" 
+            type="password" 
+            onChange={this.handleSignupFormChange.bind(this,'password')}
+          /><br/>
+          <input
+            className="signupSubmit" 
+            type="submit"
+          />
+        </form>
+      </div>
+    );
+  }
+}
 
 ReactDOM.render(
   <div>

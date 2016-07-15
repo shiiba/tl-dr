@@ -31,5 +31,15 @@ router.post('/', passport.authenticate('local', { session: false }), (req, res, 
   });
 });
 
+// pocket routes
+router.get('/pocket',passport.authenticate('pocket'), (req, res) => {
+  // The request will be redirected to Pocket for authentication, so this
+  // function will not be called.
+});
+
+router.get('/pocket/callback', passport.authenticate('pocket', { failureRedirect: '/login' }), (req, res) => {
+  res.redirect('/');
+});
+
 module.exports = router;
 

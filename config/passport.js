@@ -4,6 +4,8 @@ var LocalStrategy = require('passport-local').Strategy;
 var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
 var JwtOpts = {};
+var PocketStrategy = require('passport-pocket');
+var POCKET_CONSUMER_KEY = process.env.POCKET_KEY;
 
 var util = require("util");
 JwtOpts.jwtFromRequest = (req) => {
@@ -54,5 +56,18 @@ passport.use( new LocalStrategy(
   })
 );
 
+// Pocket Passport Setup
+passport.use( new PocketStrategy({
+    consumerKey    : POCKET_CONSUMER_KEY,
+    callbackURL    : "http://127.0.0.1:3000/auth/pocket/callback"
+  }, (username, accessToken, done) => {
+    process.nextTick(() => {
+        return done(null, {
+            username    : username,
+            accessToken : accessToken
+        });
+    });
+  }
+));
 
 module.exports = passport;
