@@ -26,10 +26,16 @@ app.use(methodOverride(function(req, res){
 }));
 
 // database
-// var mongoUri = process.env.MONGODB_URI || "mongodb://localhost/tldr_dev";
-// mongoose.connect(mongoUri);
+var mongoUri = process.env.MONGODB_URI || "mongodb://localhost/tldr_dev";
+mongoose.connect(mongoUri);
 
 // controllers
+var usersController = require('./controllers/users.js');
+app.use('/users', usersController);
+
+var authController = require('./controllers/auth.js');
+app.use('/auth', authController);
+
 var summaryController = require('./controllers/summary.js');
 app.use('/summarize', summaryController);
 
