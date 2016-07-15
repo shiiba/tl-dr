@@ -41,7 +41,7 @@ class SummarySearch extends React.Component {
     super();
     this.state = { 
       dict: [],
-      threshold: 0
+      threshold: 0.5
     };
     this.handleThresholdChange = this.handleThresholdChange.bind(this);
   }
@@ -152,6 +152,7 @@ class SummaryDisplay extends React.Component {
         <span 
           id={obj['score']}
           value={obj['normScore']}
+          className="sentence-span"
         >
           {obj['sentence']}
         </span>
@@ -160,17 +161,23 @@ class SummaryDisplay extends React.Component {
 
     return(
       <div>
-        <div>
+        <div
+          className="summary"
+        >
           {sentences}
         </div>
-        <input 
-          type="range" 
-          min="0" 
-          max="1" 
-          step=".0001" 
-          onInput={this.handleSlider.bind(this)} 
-          id="slider"
-        />
+        <div
+          className="slider-container"
+        >
+          <input 
+            type="range" 
+            min="0" 
+            max="1" 
+            step=".0001"
+            onInput={this.handleSlider.bind(this)} 
+            className="slider"
+          />
+        </div>
       </div>
     );
   }

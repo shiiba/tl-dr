@@ -1,4 +1,22 @@
-#slider{
+.search-bar{
+  text-align: center;
+}
+
+.summary{
+  margin: 2rem;
+}
+
+.slider-container{
+  text-align: center;
+}
+
+.slider{
   position: fixed;
   bottom: 0;
+}
+
+.sentence-span{
+  margin-right: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
 }
