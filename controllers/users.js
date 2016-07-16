@@ -34,5 +34,15 @@ router.use(passport.authenticate('jwt', { session: false }));
 
 // routes
 
+router.get('/pocket_auth', (req, res) => {
+  User.findById(req.cookies.userId).then(function(user){
+    if(user.pocketToken) {
+      res.send(true);
+    } else {
+      res.send(false);
+    }
+  });
+});
+
 
 module.exports = router;

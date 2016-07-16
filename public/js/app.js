@@ -33,42 +33,23 @@ function normalize(dictionary) {
   return normalized;
 };
 
-function cookieCheck(name) {
-  window.getCookie = (name) => {
-    match = document.cookie.match(new RegExp(name + '=([^;]+)'));
-    if (match) return true;
-  }
-}
-
 class Application extends React.Component {
   constructor() {
     super();
     this.state = { 
-      authenticatedUser: '',
+      authenticatedUser: document.cookie ? true : '',
       pocketAuth: false
     };
   }
-
-  // TRYING TO: get the state to check for cookies, and then render correctly with the right state
-  // Also trying to get the button to redirect to the page and pass down props so that the connect doesn't work
-
-  componentWillMount() {
-    this.setState({
-      console.log(cookieCheck("jwt_token"));
-      console.log(cookieCheck("connect.sid"));
-      authenticatedUser: cookieCheck("jwt_token") ? true : '',
-      pocketAuth: cookieCheck("connect.sid") ? true : false
-    })
-  }
-
+  
   changeLogin() {
     console.log('change login');
     this.setState({ authenticatedUser: true });
   }
 
-  changePocket() {
-    console.log('change pocketAuth');
-    this.setState({ pocketAuth: !pocketAuth });
+  changePocket(val) {
+    console.log('changing pocketAuth');
+    this.setState({ pocketAuth: val });
   }
 
   handleReset() {
@@ -83,6 +64,7 @@ class Application extends React.Component {
       return(
         <div className="logged-in">
           <SummarySearch 
+            pocketIsAuthed={this.state.pocketAuth}
             changePocket={this.changePocket.bind(this)}
           />
         </div>
@@ -267,6 +249,18 @@ class SummaryDisplay extends React.Component {
 
 class PocketAuthBtn extends React.Component {
   
+  componentWillMount() {
+    $.ajax({
+      url: '/users/pocket_auth',
+      method: 'GET'
+    })
+    .done((val) => {
+      console.log('componentWillMount pocket check value: ');
+      console.log(val);
+      this.props.changePocket(val);
+    });
+  }
+
   pocketAuth() {
     $.ajax({
       url: '/auth/pocket',
@@ -281,12 +275,16 @@ class PocketAuthBtn extends React.Component {
   }
 
   render() {
-    return(
-      <div>
-        <span>Connect Your Pocket Account:</span>
-        <a href="./auth/pocket" className="button">Connect</a>
-      </div>
-    );
+    if(this.props.pocketIsAuthed) {
+      return(
+        <div>
+          <span>Connect Your Pocket Account:</span>
+          <a href="./auth/pocket" className="button">Connect</a>
+        </div>
+      ); 
+    } else {
+      return <div></div>;
+    } 
   }
 };
 
