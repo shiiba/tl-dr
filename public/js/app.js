@@ -103,7 +103,9 @@ $(() => {
           <div className="parent-container">
             <header>
               <nav>
-                TL;DR
+                <div>
+                  <span className="header-text">TL;DR</span> – A Summarization App
+                </div>
               </nav>
             </header>
             {this.renderMainApp()}
