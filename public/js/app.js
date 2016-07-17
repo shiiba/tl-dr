@@ -68,46 +68,47 @@ $(() => {
       });
     }
 
-    render() {
+    renderMainApp() {
       if(this.state.authenticatedUser === true) {
         return(
-          <div className="parent-container">
-            <div className="logged-in all">
-              <SummarySearch 
-                pocketIsAuthed={this.state.pocketAuth}
-                changePocket={this.changePocket.bind(this)}
-              />
-            </div>
+          <div className="logged-in all">
+            <SummarySearch 
+              pocketIsAuthed={this.state.pocketAuth}
+              changePocket={this.changePocket.bind(this)}
+            />
           </div>
         );
       } else {
         return(
-          <div className="parent-container">
-            <div className="logged-out all">
-              <div className="auth-container">
-                <nav>
-                Q
-                </nav>
-                <div className="title">
-                  TL;DR
-                </div>
-                <div className="auth-forms">
-                  <div className="signup"> 
-                    <SignupForm 
-                      changeLogin={this.changeLogin.bind(this)}
-                    />
-                  </div>
-                  <div className="login">
-                    <LoginForm 
-                      changeLogin={this.changeLogin.bind(this)}
-                    />
-                  </div>
-                </div>
+          <div className="logged-out all">
+            <div className="auth-container">
+              <div className="signup"> 
+                <SignupForm 
+                  changeLogin={this.changeLogin.bind(this)}
+                />
+              </div>
+              <div className="login">
+                <LoginForm 
+                  changeLogin={this.changeLogin.bind(this)}
+                />
               </div>
             </div>
           </div>
         );
       }
+    }
+
+    render() {
+      return(
+          <div className="parent-container">
+            <header>
+              <nav>
+                TL;DR
+              </nav>
+            </header>
+            {this.renderMainApp()}
+          </div>
+      );
     }
   };
 

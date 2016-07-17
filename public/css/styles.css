@@ -72,6 +72,22 @@ table {
   margin: 0 auto;
 }
 
+nav{
+  width: 100%;
+  height: 2rem;
+  text-align: center;
+  color: white;
+  font-size: 2rem;
+  font-weight: 400;
+  background-color: gray;
+  padding: .5rem;
+  margin-bottom: 1rem;
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  text-shadow: 2px 2px #00b96a;
+}
+
 /* =============== */
 /*    ARTICLES     */
 /* =============== */
@@ -200,8 +216,6 @@ table {
 }
 
 label{
-  color: #00b96a;
-  font-size: 1.5rem;
-  font-weight: 400;
+  
 }
 
