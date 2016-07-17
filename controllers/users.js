@@ -93,4 +93,10 @@ router.get('/pocket_articles', (req, res) => {
   });
 });
 
+router.get('/articles', (req, res) => {
+  User.findById(req.cookies.userId).then(function(user){
+    res.json(user.articles);
+  });
+});
+
 module.exports = router;

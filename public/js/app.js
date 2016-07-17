@@ -139,14 +139,15 @@ class SummarySearch extends React.Component {
         <UrlSearch 
           summaryCall={this.getSummary.bind(this)}
         />
-        <PocketAuthBtn 
-          changePocket={this.props.changePocket.bind(this)}
-          pocketIsAuthed={this.props.pocketIsAuthed}
-        />
         <SummaryDisplay
           dict={this.state.dict}
           changeThresh={this.handleThresholdChange}
           threshold={this.state.threshold}
+        />
+        <ArticlesList
+          changePocket={this.props.changePocket.bind(this)}
+          pocketIsAuthed={this.props.pocketIsAuthed}
+          summaryCall={this.getSummary.bind(this)}
         />
       </div>
     );
@@ -249,32 +250,80 @@ class SummaryDisplay extends React.Component {
   }
 };
 
+class ArticlesList extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      articles: []
+    };
+  }
+
+  componentWillMount() {
+    $.ajax({
+      url: '/users/articles',
+      method: 'GET'
+    })
+    .done((articles) => {
+      this.setState({ articles: articles });
+    })
+  }
+
+  getSummary(url) {
+    console.log(url);
+    this.props.summaryCall(url);
+  }
+
+  render() {
+    let articles = _.map(this.state.articles, (article) => {
+      return(
+        <div className="article-container">
+          <div className="article-title">
+            {article.resolvedTitle}
+          </div>
+          <div className="article-wordcount">
+            {article.wordCount}
+          </div>
+          <button
+            onClick={() => this.getSummary(article.resolvedUrl)}
+          >
+            Summarize
+          </button>
+        </div>
+      );
+    });
+    return(
+      <div>
+        <PocketAuthBtn 
+          changePocket={this.props.changePocket.bind(this)}
+          pocketIsAuthed={this.props.pocketIsAuthed}
+        />
+        <div className="articles-container">
+          {articles}
+        </div>
+      </div>
+    );
+  }
+};
+
 class PocketAuthBtn extends React.Component {
+
   componentWillMount() {
     $.ajax({
       url: '/users/pocket_auth',
       method: 'GET'
     })
     .done((val) => {
-      console.log('componentWillMount pocket check value: ');
-      console.log(val);
+      // console.log('componentWillMount pocket check value: ');
+      // console.log(val);
       this.props.changePocket(val);
     });
   }
-
-  // componentDidMount() {
-  //   console.log('this.props.pocketIsAuthed: ');
-  //   console.log(this.props.pocketIsAuthed);
-  // }
 
   getPocketArticles() {
     $.ajax({
       url: '/users/pocket_articles',
       method: 'GET'
-    })
-    // .done({
-      
-    // });
+    });
   }
 
   render() {
