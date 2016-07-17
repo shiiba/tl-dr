@@ -110,16 +110,24 @@ $(() => {
   class SummarySearch extends React.Component {
     constructor() {
       super();
+      var tabList = [
+        { id: 1, name: 'URL Search' },
+        { id: 2, name: 'Pocket Articles'},
+        { id: 3, name: 'Summary'},
+      ];
       this.state = { 
         title: '',
         dict: [],
-        threshold: 0.5
+        threshold: 0.5,
+        tabList: tabList,
+        currentTab: 1
       };
+      this.getSummary = this.getSummary.bind(this);
+      this.changeTab = this.changeTab.bind(this);
       this.handleThresholdChange = this.handleThresholdChange.bind(this);
-      this.setTitle = this.setTitle.bind(this);
     }
 
-    getSummary(url) {
+    getSummary(url, existingTitle) {
       $.ajax({
         url: '/summarize',
         method: 'POST',
@@ -128,12 +136,21 @@ $(() => {
           let dictionary = createArray(setDictObjs(data.dictionary));
           let norm = normalize(dictionary);
           // console.log(norm);
-          this.setState({ dict: norm });
+          let title = existingTitle ? existingTitle : data.title;
+          this.setState({ 
+            dict: norm,
+            currentTab: 3,
+            title: title
+          });
         }.bind(this),
         error: (xhr, status, err) => {
           console.error(status, err.toString());
         }.bind(this)
       });
+    }
+
+    changeTab(tab) {
+      this.setState({ currentTab: tab.id });
     }
 
     handleThresholdChange(num) {
@@ -142,28 +159,96 @@ $(() => {
       this.setState({ threshold: num });
     }
 
-    setTitle(title) {
-      this.setState({ title: title });
-    }
-
     render() {
       return(
         <div>
-          <UrlSearch 
-            summaryCall={this.getSummary.bind(this)}
+          <Tabs
+            currentTab={this.state.currentTab}
+            tabList={this.state.tabList}
+            changeTab={this.changeTab}
           />
-          <SummaryDisplay
+          <Content 
+            currentTab={this.state.currentTab} 
+            summaryCall={this.getSummary}
+            changePocket={this.props.changePocket}
+            pocketIsAuthed={this.props.pocketIsAuthed}
             title={this.state.title}
             dict={this.state.dict}
             changeThresh={this.handleThresholdChange}
             threshold={this.state.threshold}
           />
-          <ArticlesList
-            changePocket={this.props.changePocket.bind(this)}
-            pocketIsAuthed={this.props.pocketIsAuthed}
-            summaryCall={this.getSummary.bind(this)}
-            setTitle={this.setTitle}
+        </div>
+      );
+    }
+  };
+
+  class Tabs extends React.Component {
+    handleClick(tab) {
+      this.props.changeTab(tab);
+    }
+
+    render() {
+      let tab = this.props.tabList.map((tab) => {
+        return(
+          <Tab 
+            handleClick={this.handleClick.bind(this, tab)}
+            key={tab.id}
+            name={tab.name}
+            isCurrent={(this.props.currentTab === tab.id)}
           />
+        );
+      });
+      return(
+        <ul>
+          {tab}
+        </ul>
+      );
+    }
+  };
+
+  class Tab extends React.Component {
+    handleClick(e) {
+      e.preventDefault();
+      this.props.handleClick();
+    }
+
+    render() {
+      return(
+        <li className={this.props.isCurrent ? 'current' : null}>
+          <div onClick={this.handleClick.bind(this)} >
+            {this.props.name}
+          </div>
+        </li>
+      );
+    }
+  }
+
+  class Content extends React.Component {
+    render() {
+      return(
+        <div className="content">
+          {this.props.currentTab === 1 ? 
+            <UrlSearch 
+              summaryCall={this.props.summaryCall.bind(this)}
+            />
+          : null}
+
+          {this.props.currentTab === 2 ? 
+            <ArticlesList
+              changePocket={this.props.changePocket.bind(this)}
+              pocketIsAuthed={this.props.pocketIsAuthed}
+              summaryCall={this.props.summaryCall.bind(this)}
+            />
+          : null}
+
+          {this.props.currentTab === 3 ? 
+            <SummaryDisplay
+              title={this.props.title}
+              dict={this.props.dict}
+              changeThresh={this.props.changeThresh.bind(this)}
+              threshold={this.props.threshold}
+            />
+          : null}
         </div>
       );
     }
@@ -241,11 +326,6 @@ $(() => {
         );
       });
 
-      // let inlineStyle = {
-      //   position: 'fixed',
-      //   display: 'none'
-      // };
-
       return(
         <div>
           <div className="summary-container">
@@ -295,10 +375,9 @@ $(() => {
       })
     }
 
-    getSummary(title, url) {
+    getSummary(url, title) {
       console.log(url);
-      this.props.setTitle(title);
-      this.props.summaryCall(url);
+      this.props.summaryCall(url, title);
     }
 
     render() {
@@ -315,7 +394,7 @@ $(() => {
             </div>
             <div className="article-btn-container">
               <button
-                onClick={() => this.getSummary(article.resolvedTitle, article.resolvedUrl)}
+                onClick={() => this.getSummary(article.resolvedUrl, article.resolvedTitle)}
                 className="article-btn"
               >
                 Summarize
