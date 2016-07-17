@@ -76,7 +76,7 @@ table {
 /* =============== */
 
 .articles-container{
-  background-color: #fff; 
+  
 }
 
 .article-container{
@@ -84,6 +84,7 @@ table {
   padding: .75rem;
   border: 1px solid black;
   overflow: hidden;
+  background-color: #fff; 
 }
 
 .article-info-container{
@@ -98,6 +99,7 @@ table {
 }
 
 .article-wordcount{
+  margin-top: .4rem;
   font-size: .8rem;
   font-weight: 300;
 }

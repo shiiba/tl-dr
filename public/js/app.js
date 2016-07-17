@@ -112,6 +112,7 @@ class SummarySearch extends React.Component {
       threshold: 0.5
     };
     this.handleThresholdChange = this.handleThresholdChange.bind(this);
+    this.setTitle = this.setTitle.bind(this);
   }
 
   getSummary(url) {
@@ -123,10 +124,7 @@ class SummarySearch extends React.Component {
         let dictionary = createArray(setDictObjs(data.dictionary));
         let norm = normalize(dictionary);
         // console.log(norm);
-        this.setState({ 
-          title: data.title,
-          dict: norm 
-        });
+        this.setState({ dict: norm });
       }.bind(this),
       error: (xhr, status, err) => {
         console.error(status, err.toString());
@@ -137,10 +135,13 @@ class SummarySearch extends React.Component {
   handleThresholdChange(num) {
     // console.log('threshold changing: ' + num);
     // console.log(this.state);
-    this.setState({ 
-      threshold: num
-    })
+    this.setState({ threshold: num });
   }
+
+  setTitle(title) {
+    this.setState({ title: title });
+  }
+
   render() {
     return(
       <div>
@@ -157,6 +158,7 @@ class SummarySearch extends React.Component {
           changePocket={this.props.changePocket.bind(this)}
           pocketIsAuthed={this.props.pocketIsAuthed}
           summaryCall={this.getSummary.bind(this)}
+          setTitle={this.setTitle}
         />
       </div>
     );
@@ -278,8 +280,9 @@ class ArticlesList extends React.Component {
     })
   }
 
-  getSummary(url) {
+  getSummary(title, url) {
     console.log(url);
+    this.props.setTitle(title);
     this.props.summaryCall(url);
   }
 
@@ -297,7 +300,7 @@ class ArticlesList extends React.Component {
           </div>
           <div className="article-btn-container">
             <button
-              onClick={() => this.getSummary(article.resolvedUrl)}
+              onClick={() => this.getSummary(article.resolvedTitle, article.resolvedUrl)}
               className="article-btn"
             >
               Summarize
