@@ -3,6 +3,8 @@ var router = express.Router();
 var session = require('express-session');
 var passport = require('../config/passport.js');
 var User = require('../models/users.js');
+var Article = require('../models/articles.js');
+var request = require('request');
 var jwt = require('jsonwebtoken');
 
 // initialize passport
@@ -52,7 +54,8 @@ router.get('/pocket/callback', passport.authenticate('pocket', { failureRedirect
   // console.log(req.session.pocketData.accessToken);
   // console.log(req.cookies.userId);
 
-  User.findById(req.cookies.userId).then(function(user){
+  User.findById(req.cookies.userId)
+  .then(function(user){
     console.log(user);
     user.pocketToken = req.session.pocketData.accessToken;
     user.save(function(err){

@@ -41,14 +41,15 @@ class Application extends React.Component {
       pocketAuth: false
     };
   }
-  
+
   changeLogin() {
     console.log('change login');
     this.setState({ authenticatedUser: true });
   }
 
   changePocket(val) {
-    console.log('changing pocketAuth');
+    console.log('changing pocketAuth: ');
+    console.log(val);
     this.setState({ pocketAuth: val });
   }
 
@@ -140,6 +141,7 @@ class SummarySearch extends React.Component {
         />
         <PocketAuthBtn 
           changePocket={this.props.changePocket.bind(this)}
+          pocketIsAuthed={this.props.pocketIsAuthed}
         />
         <SummaryDisplay
           dict={this.state.dict}
@@ -158,7 +160,7 @@ class UrlSearch extends React.Component {
   }
 
   handleSearchChange(e) {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     this.setState({ tempUrl: e.target.value });
   }
 
@@ -248,7 +250,6 @@ class SummaryDisplay extends React.Component {
 };
 
 class PocketAuthBtn extends React.Component {
-  
   componentWillMount() {
     $.ajax({
       url: '/users/pocket_auth',
@@ -261,21 +262,23 @@ class PocketAuthBtn extends React.Component {
     });
   }
 
-  pocketAuth() {
+  // componentDidMount() {
+  //   console.log('this.props.pocketIsAuthed: ');
+  //   console.log(this.props.pocketIsAuthed);
+  // }
+
+  getPocketArticles() {
     $.ajax({
-      url: '/auth/pocket',
-      method: 'GET',
-      success: (data) => {
-        console.log('successful get to pocket auth');
-      }.bind(this),
-      error: (xhr, status, err) => {
-        console.error(status, err.toString());
-      }.bind(this)
-    });
+      url: '/users/pocket_articles',
+      method: 'GET'
+    })
+    // .done({
+      
+    // });
   }
 
   render() {
-    if(this.props.pocketIsAuthed) {
+    if(this.props.pocketIsAuthed === false) {
       return(
         <div>
           <span>Connect Your Pocket Account:</span>
@@ -283,7 +286,15 @@ class PocketAuthBtn extends React.Component {
         </div>
       ); 
     } else {
-      return <div></div>;
+      return (
+        <div>
+          <button
+            onClick={this.getPocketArticles.bind(this)}
+          >
+            Fetch Pocket Articles
+          </button>
+        </div>
+      );
     } 
   }
 };
@@ -307,15 +318,15 @@ class LoginForm extends React.Component {
     e.preventDefault();
     let username = this.state.username.trim();
     let password = this.state.password.trim();
-    console.log('username: ' + username);
-    console.log('password: ' + password);
+    // console.log('username: ' + username);
+    // console.log('password: ' + password);
     this.loginAJAX(username, password);
   }
 
   loginAJAX(username, password) {
-    console.log('login AJAX hit');
-    console.log(username);
-    console.log(password);
+    // console.log('login AJAX hit');
+    // console.log(username);
+    // console.log(password);
     $.ajax({
       url: "/auth",
       method: "POST",
@@ -324,10 +335,10 @@ class LoginForm extends React.Component {
         password: password
       },
       success: function(data) {
-        console.log('successful login ajax call');
+        // console.log('successful login ajax call');
         Cookies.set('jwt_token', data.token);
         Cookies.set('userId', data.userId);
-        console.log(data);
+        // console.log(data);
         this.props.changeLogin(data.token);
       }.bind(this),
       error: function(xhr, status, err) {
@@ -412,8 +423,8 @@ class SignupForm extends React.Component {
   }
 
   handleSignupAuthentication(username, password) {
-    var self = this;
-    var callback = function() {
+    let self = this;
+    let callback = function() {
       self.props.changeLogin();
     };
     $.ajax({
@@ -423,10 +434,9 @@ class SignupForm extends React.Component {
         username: username,
         password: password
       },
-      //if saved it console logs
       success: function(data) {
-        console.log('Token acquired.');
-        console.log(data);
+        // console.log('Token acquired.');
+        // console.log(data);
         Cookies.set('jwt_token', data.token);
         Cookies.set('userId', data.userId);
         callback();
