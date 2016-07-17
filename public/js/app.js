@@ -63,33 +63,37 @@ class Application extends React.Component {
   render() {
     if(this.state.authenticatedUser === true) {
       return(
-        <div className="logged-in">
-          <SummarySearch 
-            pocketIsAuthed={this.state.pocketAuth}
-            changePocket={this.changePocket.bind(this)}
-          />
+        <div className="parent-container">
+          <div className="logged-in all">
+            <SummarySearch 
+              pocketIsAuthed={this.state.pocketAuth}
+              changePocket={this.changePocket.bind(this)}
+            />
+          </div>
         </div>
       );
     } else {
       return(
-        <div className="logged-out">
-          <div className="auth-container">
-            <nav>
-            Q
-            </nav>
-            <div className="title">
-              TL;DR
-            </div>
-            <div className="auth-forms">
-              <div className="signup"> 
-                <SignupForm 
-                  changeLogin={this.changeLogin.bind(this)}
-                />
+        <div className="parent-container">
+          <div className="logged-out all">
+            <div className="auth-container">
+              <nav>
+              Q
+              </nav>
+              <div className="title">
+                TL;DR
               </div>
-              <div className="login">
-                <LoginForm 
-                  changeLogin={this.changeLogin.bind(this)}
-                />
+              <div className="auth-forms">
+                <div className="signup"> 
+                  <SignupForm 
+                    changeLogin={this.changeLogin.bind(this)}
+                  />
+                </div>
+                <div className="login">
+                  <LoginForm 
+                    changeLogin={this.changeLogin.bind(this)}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -103,6 +107,7 @@ class SummarySearch extends React.Component {
   constructor() {
     super();
     this.state = { 
+      title: '',
       dict: [],
       threshold: 0.5
     };
@@ -118,7 +123,10 @@ class SummarySearch extends React.Component {
         let dictionary = createArray(setDictObjs(data.dictionary));
         let norm = normalize(dictionary);
         // console.log(norm);
-        this.setState({ dict: norm });
+        this.setState({ 
+          title: data.title,
+          dict: norm 
+        });
       }.bind(this),
       error: (xhr, status, err) => {
         console.error(status, err.toString());
@@ -140,6 +148,7 @@ class SummarySearch extends React.Component {
           summaryCall={this.getSummary.bind(this)}
         />
         <SummaryDisplay
+          title={this.state.title}
           dict={this.state.dict}
           changeThresh={this.handleThresholdChange}
           threshold={this.state.threshold}
@@ -228,17 +237,18 @@ class SummaryDisplay extends React.Component {
 
     return(
       <div>
-        <div
-          className="summary"
-        >
-          {sentences}
+        <div className="summary-container">
+          <div className="summary-title">
+            {this.props.title}
+          </div>
+          <div className="summary-text">
+            {sentences}
+          </div>
         </div>
-        <div
-          className="slider-container"
-        >
+        <div className="slider-container">
           <input 
             type="range" 
-            min="0" 
+            min="0.3" 
             max="1" 
             step=".0001"
             onInput={this.handleSlider.bind(this)} 
@@ -277,17 +287,22 @@ class ArticlesList extends React.Component {
     let articles = _.map(this.state.articles, (article) => {
       return(
         <div className="article-container">
-          <div className="article-title">
-            {article.resolvedTitle}
+          <div className="article-info-container">
+            <div className="article-title">
+              {article.resolvedTitle}
+            </div>
+            <div className="article-wordcount">
+              Word Count: {article.wordCount}
+            </div>
           </div>
-          <div className="article-wordcount">
-            {article.wordCount}
+          <div className="article-btn-container">
+            <button
+              onClick={() => this.getSummary(article.resolvedUrl)}
+              className="article-btn"
+            >
+              Summarize
+            </button>
           </div>
-          <button
-            onClick={() => this.getSummary(article.resolvedUrl)}
-          >
-            Summarize
-          </button>
         </div>
       );
     });

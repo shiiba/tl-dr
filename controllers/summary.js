@@ -3,9 +3,9 @@ var router = express.Router();
 var summary = require('node-tldr');
 var util = require('util');
 
-function deepPrint(x){
-  console.log(util.inspect(x, {showHidden: false, depth: null}));
-}
+// function deepPrint(x){
+//   console.log(util.inspect(x, {showHidden: false, depth: null}));
+// }
 
 router.post('/', function(req, res) {
   // console.log(req.body);
