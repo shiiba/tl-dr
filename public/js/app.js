@@ -33,13 +33,6 @@ function normalize(dictionary) {
   return normalized;
 };
 
-// function placeFooter() {
-//   let windHeight = $(window).height();
-//   let footerHeight = $('#footer').height();
-//   let offset = parseInt(windHeight) - parseInt(footerHeight);
-//   $('#footer').css('top', offset);
-// }
-
 $(() => {
   class Application extends React.Component {
     constructor() {
@@ -581,12 +574,4 @@ $(() => {
     </div>,
      document.getElementById('container')
   );
-
-  // $(window).resize(() => {
-  //   placeFooter();
-  // });
-  // placeFooter();
-  // // hide it before it's positioned
-  // $('#footer').css('display','inline');
-
 });

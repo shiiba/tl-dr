@@ -70,6 +70,8 @@ table {
 .all{
   max-width: 75%;
   margin: 0 auto;
+  margin-top: 3rem;
+  padding-top: 2rem;
 }
 
 nav{
@@ -137,7 +139,7 @@ nav{
 .article-btn{
   font-family: 'PT Serif', serif;
   text-decoration: none;
-  background: #545556;
+  background: gray;
   border: none;
   border-radius: 40px;
   position: relative;
@@ -219,9 +221,5 @@ nav{
   margin-right: 10px;
   margin-bottom: 10px;
   display: inline-block;
-}
-
-label{
-  
 }
 
