@@ -7,7 +7,7 @@ var Article = require('../models/articles.js');
 var request = require('request');
 var jwt = require('jsonwebtoken');
 
-// initialize passport
+// Initializes Passport
 router.use(session({ secret: 'SECRET', resave: true, saveUninitialized: true }));
 router.use(passport.initialize());
 router.use(passport.session());
@@ -18,11 +18,7 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-// router.get('/', (req, res) => {
-//   res.send('testing if the auth.js route works');
-// });
-
-// login post requtest, returning JWT Token on success
+// Login POST request, returning signed JWT Token on success
 router.post('/', passport.authenticate('local', { session: false }), (req, res, next) => {
   console.log('==========================');
   console.log('req.body: ' + req.body);
@@ -42,12 +38,13 @@ router.post('/', passport.authenticate('local', { session: false }), (req, res, 
   });
 });
 
-// pocket routes
+// Pocket route to initialize Pocket OAuth flow
 router.get('/pocket',passport.authenticate('pocket'), (req, res) => {
   // The request will be redirected to Pocket for authentication, so this
   // function will not be called.
 });
 
+// Pocket route that saves the returned Pocket access token on the last step of OAuth
 router.get('/pocket/callback', passport.authenticate('pocket', { failureRedirect: '/login' }), (req, res) => {
   // console.log('req.session.pocketData.accessToken:');
   // console.log(req.session.pocketData.accessToken);

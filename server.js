@@ -1,4 +1,4 @@
-// requirements
+// Requirements
 var express = require('express');
 var app = express();
 var logger = require('morgan');
@@ -8,7 +8,7 @@ var methodOverride = require('method-override');
 var mongoose = require('mongoose');
 var port = process.env.PORT || 3000;
 
-// middleware
+// Middleware
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -22,11 +22,11 @@ app.use(methodOverride((req, res) => {
   }
 }));
 
-// database
+// Database
 var mongoUri = process.env.MONGODB_URI || "mongodb://localhost/tldr_dev";
 mongoose.connect(mongoUri);
 
-// controllers
+// Controllers
 var usersController = require('./controllers/users.js');
 app.use('/users', usersController);
 
@@ -36,7 +36,7 @@ app.use('/auth', authController);
 var summaryController = require('./controllers/summary.js');
 app.use('/summarize', summaryController);
 
-// listen
+// Listen
 app.listen(port);
 console.log('==============');
 console.log('listening on port ' + port);

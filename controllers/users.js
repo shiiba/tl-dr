@@ -8,10 +8,12 @@ var util = require('util');
 var _ = require('underscore')._;
 var pocketUrl = 'https://getpocket.com/v3/get';
 
+// Allows for inspection of normally printed [Object: Object]s
 function deepPrint(x){
   console.log(util.inspect(x, {showHidden: false, depth: null}));
 };
 
+// Creates array of objects from nested objects
 function createArray(object) {
   var tmp = [];
   _.each(object, (obj) => {
@@ -20,6 +22,8 @@ function createArray(object) {
   return tmp;
 };
 
+// Creates takes in articles object array, instantiates new article objects, 
+// and returns the new array
 function createArticles(articles) {
   var tmp = [];
   _.each(articles, (article) => {
@@ -42,8 +46,7 @@ function createArticles(articles) {
 // No Auth Routes
 // --------------------------
 
-// create a new user
-
+// Create a new user
 router.post('/register', (req, res) => {
   console.log('req.body: ' + req.body);
   User.create(req.body, (err, user) => {
@@ -60,8 +63,7 @@ router.post('/register', (req, res) => {
 // --------------------------
 // router.use(passport.authenticate('jwt', { session: false }));
 
-// routes
-
+// Checks if the user has a Pocket Token already
 router.get('/pocket_auth', (req, res) => {
   User.findById(req.cookies.userId).then(function(user){
     if(user.pocketToken) {
@@ -72,6 +74,7 @@ router.get('/pocket_auth', (req, res) => {
   });
 });
 
+// Queries Pocket API for a user's latest 30 articles, and saves them to the DB
 router.get('/pocket_articles', (req, res) => {
   User.findById(req.cookies.userId).then(function(user){
     var accessToken = user.pocketToken;
@@ -93,6 +96,7 @@ router.get('/pocket_articles', (req, res) => {
   });
 });
 
+// Returns a user's articles from the DB
 router.get('/articles', (req, res) => {
   User.findById(req.cookies.userId).then(function(user){
     res.json(user.articles);

@@ -8,6 +8,7 @@ var PocketStrategy = require('passport-pocket');
 var POCKET_CONSUMER_KEY = process.env.POCKET_KEY;
 
 var util = require("util");
+
 JwtOpts.jwtFromRequest = (req) => {
   var token = null;
   if (req && req.cookies) {
@@ -18,6 +19,7 @@ JwtOpts.jwtFromRequest = (req) => {
 
 JwtOpts.secretOrKey = process.env.JWT_SECRET;
 
+// Passport strategy to authenticate user based on JWT token 
 passport.use(new JwtStrategy(JwtOpts, (jwt_payload, done) => {
   console.log( "JWT PAYLOAD" + util.inspect(jwt_payload));
 
@@ -36,12 +38,11 @@ passport.use(new JwtStrategy(JwtOpts, (jwt_payload, done) => {
   });
 }));
 
+// Passport strategy for authenticating with a username and password
 passport.use( new LocalStrategy(
   (username, password, done ) => {
-    console.log('we out here fam')
     User.findOne({ username: username }, ( err, dbUser ) => {
       if (err) { 
-        console.log('don work fam');
         return done(err); }
       if (!dbUser) {
         return done(null, false);
@@ -56,7 +57,7 @@ passport.use( new LocalStrategy(
   })
 );
 
-// Pocket Passport Setup
+// Passport strategy for using Pocket OAuth 
 passport.use( new PocketStrategy({
     consumerKey    : POCKET_CONSUMER_KEY,
     callbackURL    : "http://tl-dr-app.herokuapp.com/auth/pocket/callback"

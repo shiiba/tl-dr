@@ -10,6 +10,7 @@ var UserSchema = new mongoose.Schema({
   articles: [articleSchema]
 });
 
+// Hash user's password before saving it to the DB
 UserSchema.pre('save', function(next) {
   if(this.isModified('password')) {
     this.password = bcrypt.hashSync(this.password, 10);
@@ -17,6 +18,7 @@ UserSchema.pre('save', function(next) {
   next();
 });
 
+// Checks login password with one stored in DB
 UserSchema.methods.authenticate = function(passwordTry) {
   return bcrypt.compareSync(passwordTry, this.password);
 };

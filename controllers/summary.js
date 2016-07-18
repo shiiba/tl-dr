@@ -7,6 +7,7 @@ var util = require('util');
 //   console.log(util.inspect(x, {showHidden: false, depth: null}));
 // }
 
+// Calls summarize on the submitted URL via the modified node-tldr module
 router.post('/', function(req, res) {
   // console.log(req.body);
   console.log('==============================');

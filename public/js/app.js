@@ -1,3 +1,4 @@
+// Converts TF-IDF algorithm output ('sentence': 'score'), to correctly named k:v pairs (uses underscore.js)
 function setDictObjs(dictionary){
   let tmp = _.mapObject(dictionary, (val, key) => {
     return({
@@ -8,6 +9,7 @@ function setDictObjs(dictionary){
   return tmp;
 };
 
+// Creates an array of objects out of a nested object
 function createArray(dictionary) {
   let tmp = [];
   _.each(dictionary, (obj) => {
@@ -16,6 +18,7 @@ function createArray(dictionary) {
   return tmp;
 };
 
+// Finds the min and max score of sentences and returns them
 function minAndMax(dictionary) {
   let min, max = 0;
   max = _.max(dictionary, (sent) => { return sent.score }).score;
@@ -23,6 +26,7 @@ function minAndMax(dictionary) {
   return { max: max, min: min };
 }
 
+// Normalizes the scores on a scale of 0 to 1 and add it to the object
 function normalize(dictionary) {
   let minMax = minAndMax(dictionary);
   let normalized = _.map(dictionary, (obj) => {
@@ -33,7 +37,11 @@ function normalize(dictionary) {
   return normalized;
 };
 
+// Using React with ES6 Syntax
 $(() => {
+
+// Main React parent component that maintains authenticated states and displays
+// logged-in or logged-out experiences
   class Application extends React.Component {
     constructor() {
       super();
@@ -43,17 +51,20 @@ $(() => {
       };
     }
 
+    // Sets state which determines whether login/signup is displayed
     changeLogin() {
       console.log('change login');
       this.setState({ authenticatedUser: true });
     }
 
+    // Sets state which determines whether pocket connect or fetch btn appears
     changePocket(val) {
       console.log('changing pocketAuth: ');
       console.log(val);
       this.setState({ pocketAuth: val });
     }
 
+    // Logs the user out, resets state, and removes cookies
     handleReset() {
       Cookies.remove('jwt_token');
       Cookies.remove('connect.sid');
@@ -116,10 +127,12 @@ $(() => {
     }
   };
 
+// Main logged-in component that holds summarized content and tabbed navigation 
+// state, and makes AJAX calls to the summarization algorithm
   class SummarySearch extends React.Component {
     constructor() {
       super();
-      var tabList = [
+      let tabList = [
         { id: 1, name: 'URL Search' },
         { id: 2, name: 'Pocket Articles'},
         { id: 3, name: 'Summary'},
@@ -136,6 +149,8 @@ $(() => {
       this.handleThresholdChange = this.handleThresholdChange.bind(this);
     }
 
+    // AJAX call to the summary controller and summarization module; sets state
+    // up at the parent component with the returned scored dictionary
     getSummary(url, existingTitle) {
       $.ajax({
         url: '/summarize',
@@ -158,10 +173,12 @@ $(() => {
       });
     }
 
+    // Sets state of the current tab
     changeTab(tab) {
       this.setState({ currentTab: tab.id });
     }
 
+    // Sets state of the threshold based on HTML range slider, which filters sentences
     handleThresholdChange(num) {
       // console.log('threshold changing: ' + num);
       // console.log(this.state);
@@ -193,6 +210,7 @@ $(() => {
     }
   };
 
+  // Tabs component that generates three tab child components
   class Tabs extends React.Component {
     handleClick(tab) {
       this.props.changeTab(tab);
@@ -217,6 +235,7 @@ $(() => {
     }
   };
 
+  // Tab component that generates individual tab; when clicked, switches tabs
   class Tab extends React.Component {
     handleClick(e) {
       e.preventDefault();
@@ -234,6 +253,8 @@ $(() => {
     }
   }
 
+  // Contains the main content – search, articles list, and summary display
+  // conditionally rendered based on currentTab props
   class Content extends React.Component {
     render() {
       return(
@@ -265,17 +286,20 @@ $(() => {
     }
   };
 
+  // Component that allows you to search and summarize by URL
   class UrlSearch extends React.Component {
     constructor() {
       super();
       this.state = { tempUrl: null };
     }
 
+    // Maintains temporary URL storage
     handleSearchChange(e) {
       // console.log(e.target.value);
       this.setState({ tempUrl: e.target.value });
     }
 
+    // Passes temporary URL state to the summarization AJAX call from its parent
     handleSubmit(e) {
       e.preventDefault();
       this.props.summaryCall(this.state.tempUrl);
@@ -313,13 +337,16 @@ $(() => {
     }
   };
 
+  // Displays the summarized text, filtered by the slider threshold
   class SummaryDisplay extends React.Component {
+    // Sets the threshold state in parent component as the slider moves
     handleSlider(e) {
       console.log('threshold in child component: ' + e.target.value);
       // console.log(this.props);
       this.props.changeThresh(e.target.value);
     }
 
+    // Filters the displayed sentences based on the slider threshold number
     render() {
       let filtered = _.filter(this.props.dict, (obj) => {
         return obj['normScore'] <= this.props.threshold;
@@ -367,6 +394,7 @@ $(() => {
     }
   };
 
+  // Contains User's Pocket account details, fetches articles, stores and displays them
   class ArticlesList extends React.Component {
     constructor() {
       super();
@@ -375,6 +403,7 @@ $(() => {
       };
     }
 
+    // Grabs the latest pocket articles in the DB and updates the state before render
     componentWillMount() {
       $.ajax({
         url: '/users/articles',
@@ -385,6 +414,7 @@ $(() => {
       })
     }
 
+    // Calls summarize on the article when the summary button is clicked
     getSummary(url, title) {
       console.log(url);
       this.props.summaryCall(url, title);
@@ -427,8 +457,10 @@ $(() => {
     }
   };
 
+  // Conditionally displays Pocket OAuth or Fetch Articles buttons
   class PocketAuthBtn extends React.Component {
 
+    // Checks to see if the user is already auth'd with Pocket
     componentWillMount() {
       $.ajax({
         url: '/users/pocket_auth',
@@ -441,6 +473,8 @@ $(() => {
       });
     }
 
+    // AJAX call to users controller that queries the Pocket API and grabs a 
+    // users's latest 30 articles; stores them in the DB
     getPocketArticles() {
       $.ajax({
         url: '/users/pocket_articles',
@@ -470,6 +504,7 @@ $(() => {
     }
   };
 
+  // Login form
   class LoginForm extends React.Component {
     constructor() {
       super();
@@ -479,12 +514,14 @@ $(() => {
       };
     }
 
+    // Stores current login form values in state
     handleLoginFormChange(stateName, e) {
       let change = {};
       change[stateName] = e.target.value;
       this.setState(change);
     }
 
+    // Trims the inputs and hits the login AJAX method
     handleSubmit(e) {
       e.preventDefault();
       let username = this.state.username.trim();
@@ -494,6 +531,7 @@ $(() => {
       this.loginAJAX(username, password);
     }
 
+    // Hits the auth controller and logs the user in
     loginAJAX(username, password) {
       // console.log('login AJAX hit');
       // console.log(username);
@@ -505,14 +543,14 @@ $(() => {
           username: username,
           password: password
         },
-        success: function(data) {
+        success: (data) => {
           // console.log('successful login ajax call');
           Cookies.set('jwt_token', data.token);
           Cookies.set('userId', data.userId);
           // console.log(data);
           this.props.changeLogin(data.token);
         }.bind(this),
-        error: function(xhr, status, err) {
+        error: (xhr, status, err) => {
           console.error(status, err.toString());
         }.bind(this),
       });
@@ -553,17 +591,24 @@ $(() => {
     }
   }
 
+  // Signup form
   class SignupForm extends React.Component {
     constructor() {
       super();
+      this.state = { 
+        username: '',
+        password: ''
+      };
     }
 
+    // Temporarily stores the form data in state
     handleSignupFormChange(setName, e) {
       let change = {};
       change[setName] = e.target.value
       this.setState(change);
     }
 
+    // Trims inputs and hits signup AJAX method
     handleSubmit(e) {
       e.preventDefault();
       let username = this.state.username.trim();
@@ -571,6 +616,8 @@ $(() => {
       this.signupAJAX(username, password);
     }
 
+    // POST request to users controller that creates the user in the DB and then
+    // hits the auto-authentication method
     signupAJAX(username, password) {
       console.log('sending signup post request');
       $.ajax({
@@ -580,20 +627,21 @@ $(() => {
           username: username,
           password: password
         },
-        success: function(data){
+        success: (data) => {
           console.log("A new user signed up!");
           console.log(data);
           this.handleSignupAuthentication(username, password);
         }.bind(this),
-        error: function(xhr, status, err) {
+        error: (xhr, status, err) => {
           console.error(status, err.toString());
         }.bind(this)
       });
     }
 
+    // Auto-authenticates users who sign up
     handleSignupAuthentication(username, password) {
       let self = this;
-      let callback = function() {
+      let callback = () => {
         self.props.changeLogin();
       };
       $.ajax({
@@ -603,14 +651,14 @@ $(() => {
           username: username,
           password: password
         },
-        success: function(data) {
+        success: (data) => {
           // console.log('Token acquired.');
           // console.log(data);
           Cookies.set('jwt_token', data.token);
           Cookies.set('userId', data.userId);
           callback();
         }.bind(this),
-        error: function(xhr, status, err) {
+        error: (xhr, status, err) => {
           console.error(status, err.toString());
         }.bind(this)
       });
@@ -651,6 +699,7 @@ $(() => {
     }
   }
 
+ // Main React Render function
   ReactDOM.render(
     <div>
       <Application />
