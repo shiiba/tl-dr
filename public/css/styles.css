@@ -294,7 +294,7 @@ input:hover{
 /* =============== */
 
 .summary-container{
-  /*margin: 1rem;*/
+  padding-bottom: 2rem;
 }
 
 .summary-title{
