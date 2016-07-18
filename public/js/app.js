@@ -76,7 +76,7 @@ $(() => {
         );
       } else {
         return(
-          <div className="logged-out all">
+          <div className="logged-out">
             <div className="auth-container">
               <div className="signup"> 
                 <SignupForm 
@@ -125,7 +125,7 @@ $(() => {
         { id: 3, name: 'Summary'},
       ];
       this.state = { 
-        title: '',
+        title: 'No Article Found. Summarize Something!',
         dict: [],
         threshold: 0.5,
         tabList: tabList,
@@ -520,37 +520,35 @@ $(() => {
 
     render() {
       return(
-        <div className="login">
-          <div className="login-form" >
-            <h1>Please Login</h1>
-            <form onSubmit={this.handleSubmit.bind(this)}>
-              <label htmlFor="username" >
-                Username:
-              </label>
-              <br/>
-              <input 
-                className="username-login-form" 
-                type="text" 
-                value={this.state.username} 
-                onChange={this.handleLoginFormChange.bind(this, 'username')}
-              /><br/>
-              <label htmlFor="password">
-                Password:
-              </label>
-              <br/>
-              <input 
-                className="password-login-form" 
-                type="password" 
-                value={this.state.password} 
-                onChange={this.handleLoginFormChange.bind(this, 'password')}
-              /><br/>
-              <input
-                className="loginSubmit" 
-                type="submit"
-              />
-            </form>
-          </div>
-        </div>  
+        <div className="login-form" >
+          <h1>Please Login</h1>
+          <form onSubmit={this.handleSubmit.bind(this)}>
+            <label htmlFor="username" >
+              Username:
+            </label>
+            <br/>
+            <input 
+              className="username-login-form" 
+              type="text" 
+              value={this.state.username} 
+              onChange={this.handleLoginFormChange.bind(this, 'username')}
+            /><br/>
+            <label htmlFor="password">
+              Password:
+            </label>
+            <br/>
+            <input 
+              className="password-login-form" 
+              type="password" 
+              value={this.state.password} 
+              onChange={this.handleLoginFormChange.bind(this, 'password')}
+            /><br/>
+            <input
+              className="loginSubmit" 
+              type="submit"
+            />
+          </form>
+        </div>
       );
     }
   }
@@ -625,10 +623,6 @@ $(() => {
           <form 
             onSubmit={this.handleSubmit.bind(this)}
           >
-            <label htmlFor="firstName"> 
-              First Name: 
-            </label>
-            <br/>
             <label htmlFor="username"> 
               Username: 
             </label>

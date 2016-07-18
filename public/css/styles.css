@@ -66,17 +66,52 @@ table {
 
 /* ============================================= */
 
+/* =============== */
+/*      MAIN       */
+/* =============== */
+
 .parent-container{
   background-color: #f5f5f5;
   min-height: 100vh;
 }
 
 .all{
-  max-width: 75%;
+  max-width: 60%;
   margin: 0 auto;
   margin-top: 2rem;
   padding-top: 2rem;
 }
+
+/* =============== */
+/*      AUTH       */
+/* =============== */
+
+.auth-container{
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 2rem;
+  padding-top: 8rem;
+}
+
+.signup, .login{
+  width: 47%;
+  display: inline-block;
+  text-align: center;
+}
+
+.auth-container h1{
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+}
+
+.signup{
+  border-right: 1.5px dotted gray;
+}
+
+
+/* =============== */
+/*   NAVIGATION    */
+/* =============== */
 
 nav{
   width: 100%;
@@ -134,12 +169,16 @@ nav{
   padding: 14px 16px;
   text-decoration: none;
   cursor: pointer;
-  width: 24.3%;
+  width: 25%;
   font-size: .8rem;
 }
 
+.tabs-container li:not(:last-child){
+  margin-right: 6px;
+}
+
 .tabs-container a:hover:not(.active) {
-    background-color: #111;
+  background-color: #111;
 }
 
 .current {
@@ -149,10 +188,6 @@ nav{
 /* =============== */
 /*    ARTICLES     */
 /* =============== */
-
-.articles-container{
-  
-}
 
 .article-container{
   margin: .2rem 0;
@@ -179,6 +214,10 @@ nav{
   font-weight: 300;
 }
 
+/* =============== */
+/*     BUTTONS     */
+/* =============== */
+
 .article-btn-container{
   width: 12%;
   float: right;
@@ -186,7 +225,7 @@ nav{
   display:inline-block;
 }
 
-button{
+button, input[type="submit"]{
   font-family: 'PT Serif', serif;
   text-decoration: none;
   background: gray;
@@ -203,12 +242,12 @@ button{
   cursor: pointer;
 }
 
-button:hover{
+button:hover, input[type="submit"]:hover{
   box-shadow: 0 2px #00b96a;
   top: 2px;
 }
 
-button:focus{
+button:focus, input[type="submit"]:focus{
   outline: 0;
 }
 
@@ -236,7 +275,7 @@ label{
   width: 28%;
 }
 
-input[type="text"]{
+input[type="text"], input[type="password"]{
   outline: none !important;
   margin: 10px;
   padding: 15px;
@@ -299,7 +338,7 @@ input:hover{
   -webkit-box-sizing: border-box;
   position: fixed;
   bottom: 0;
-  width: 75%;
+  width: 60%;
   height: 2rem;
   background-color: gray;
   z-index: 1;
@@ -315,3 +354,4 @@ input:hover{
 .hidden{
   display: none;
 }
+
