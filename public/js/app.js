@@ -55,6 +55,9 @@ $(() => {
     }
 
     handleReset() {
+      Cookies.remove('jwt_token');
+      Cookies.remove('connect.sid');
+      Cookies.remove('userId');
       this.setState({ 
         authenticatedUser: '',
         pocketAuth: false
@@ -98,6 +101,12 @@ $(() => {
               <nav>
                 <div>
                   <span className="header-text">TL;DR</span> – A Summarization App
+                </div>
+                <div 
+                  className={this.state.authenticatedUser === true ? "logout" : "hidden"}
+                  onClick={this.handleReset.bind(this)}
+                >
+                  Logout
                 </div>
               </nav>
             </header>
@@ -161,12 +170,14 @@ $(() => {
 
     render() {
       return(
-        <div>
-          <Tabs
-            currentTab={this.state.currentTab}
-            tabList={this.state.tabList}
-            changeTab={this.changeTab}
-          />
+        <div className="app-container">
+          <div className="tabs-container">
+            <Tabs
+              currentTab={this.state.currentTab}
+              tabList={this.state.tabList}
+              changeTab={this.changeTab}
+            />
+          </div>
           <Content 
             currentTab={this.state.currentTab} 
             summaryCall={this.getSummary}
@@ -405,13 +416,13 @@ $(() => {
       });
       return(
         <div>
+          <div className="articles-container">
+            {articles}
+          </div>
           <PocketAuthBtn 
             changePocket={this.props.changePocket.bind(this)}
             pocketIsAuthed={this.props.pocketIsAuthed}
           />
-          <div className="articles-container">
-            {articles}
-          </div>
         </div>
       );
     }
@@ -439,16 +450,9 @@ $(() => {
     }
 
     render() {
-      if(this.props.pocketIsAuthed === false) {
-        return(
-          <div>
-            <span>Connect Your Pocket Account:</span>
-            <a href="./auth/pocket" className="button">Connect</a>
-          </div>
-        ); 
-      } else {
+      if(this.props.pocketIsAuthed === true) {
         return (
-          <div>
+          <div className="fetch-btn">
             <button
               onClick={this.getPocketArticles.bind(this)}
             >
@@ -456,6 +460,13 @@ $(() => {
             </button>
           </div>
         );
+      } else {
+        return(
+          <div>
+            <span>Connect Your Pocket Account:</span>
+            <a href="./auth/pocket" className="button">Connect</a>
+          </div>
+        ); 
       } 
     }
   };

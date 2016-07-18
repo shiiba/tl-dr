@@ -70,7 +70,7 @@ table {
 .all{
   max-width: 75%;
   margin: 0 auto;
-  margin-top: 3rem;
+  margin-top: 2rem;
   padding-top: 2rem;
 }
 
@@ -94,6 +94,52 @@ nav{
   font-size: 1.7rem;
   font-weight: 400;
   text-shadow: 2px 2px #00b96a;
+}
+
+.logout{
+  position: fixed;
+  top: 20px;
+  right: 10px;
+  font-size: .8rem;
+  cursor: pointer;
+}
+
+.app-container{
+  width: 100%;
+}
+
+.tabs-container{
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.tabs-container ul{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.tabs-container li{
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  width: 24.3%;
+  font-size: .8rem;
+}
+
+.tabs-container a:hover:not(.active) {
+    background-color: #111;
+}
+
+.current {
+  background-color: #00b96a;
 }
 
 /* =============== */
@@ -136,7 +182,7 @@ nav{
   display:inline-block;
 }
 
-.article-btn{
+button{
   font-family: 'PT Serif', serif;
   text-decoration: none;
   background: gray;
@@ -150,24 +196,52 @@ nav{
   -webkit-transition: none;
   -moz-transition: none;
   transition: none;
+  cursor: pointer;
 }
 
-.article-btn:hover{
+button:hover{
   box-shadow: 0 2px #00b96a;
   top: 2px;
 }
 
-.article-btn:focus{
+button:focus{
   outline: 0;
 }
 
+.fetch-btn{
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.fetch-bth button{
+  width: 200px;
+}
 
 /* =============== */
 /*     SEARCH      */
 /* =============== */
 
 .search-bar{
+  margin: 2rem;
   text-align: center;
+}
+
+label{
+  margin-right: 1rem;
+  padding-top: 1rem;
+  width: 28%;
+}
+
+input[type="text"]{
+  outline: none !important;
+  margin: 10px;
+  padding: 15px;
+  width: 50%;
+  font-size: 1rem;
+}
+
+input:hover{
+  border: 2px solid #00b96a;
 }
 
 /* =============== */
@@ -223,3 +297,6 @@ nav{
   display: inline-block;
 }
 
+.hidden{
+  display: none;
+}
