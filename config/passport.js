@@ -59,7 +59,7 @@ passport.use( new LocalStrategy(
 // Pocket Passport Setup
 passport.use( new PocketStrategy({
     consumerKey    : POCKET_CONSUMER_KEY,
-    callbackURL    : "http://127.0.0.1:3000/auth/pocket/callback"
+    callbackURL    : "http://tl-dr-app.herokuapp.com/auth/pocket/callback"
   }, (username, accessToken, done) => {
     process.nextTick(() => {
         return done(null, {

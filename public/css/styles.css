@@ -4,6 +4,10 @@
 
 @import url(https://fonts.googleapis.com/css?family=PT+Serif:400,700);
 
+@-webkit-keyframes fadeIn { from { opacity:0; background-color: #00b96a; } to { opacity:1; color: black; } }
+@-moz-keyframes fadeIn { from { opacity:0; background-color: #00b96a; } to { opacity:1; color: black; } }
+@keyframes fadeIn { from { opacity:0; background-color: #00b96a; } to { opacity:1; color: black; } }
+
 
 /* ============================================= */
 
@@ -259,7 +263,24 @@ input:hover{
 }
 
 .summary-text{
-  
+}
+
+.sentence-span{
+  margin-right: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+  opacity:0;  /* make things invisible upon start */
+  -webkit-animation:fadeIn ease-in 1;  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+  -moz-animation:fadeIn ease-in 1;
+  animation:fadeIn ease-in 1;
+
+  -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+  -moz-animation-fill-mode:forwards;
+  animation-fill-mode:forwards;
+
+  -webkit-animation-duration:.4s;
+  -moz-animation-duration:.4s;
+  animation-duration:.4s;
 }
 
 /* =============== */
@@ -289,12 +310,6 @@ input:hover{
   width: 50%;
   color: white;
   margin-top: .3rem;
-}
-
-.sentence-span{
-  margin-right: 10px;
-  margin-bottom: 10px;
-  display: inline-block;
 }
 
 .hidden{

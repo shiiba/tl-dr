@@ -350,7 +350,6 @@ $(() => {
           <div 
             className="slider-container"
             id="footer"
-            // style={inlineStyle}
           >
             <div className="slider-second-container">
               <input 
