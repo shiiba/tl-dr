@@ -339,11 +339,26 @@ $(() => {
 
   // Displays the summarized text, filtered by the slider threshold
   class SummaryDisplay extends React.Component {
+    constructor() {
+      super();
+      this.state = { key: [] };
+      this.tmp = [];
+    }
+
     // Sets the threshold state in parent component as the slider moves
     handleSlider(e) {
       console.log('threshold in child component: ' + e.target.value);
       // console.log(this.props);
       this.props.changeThresh(e.target.value);
+    }
+
+    setKey(score) {
+      return this.state.key.indexOf(score) > -1 ? score : score + Math.random() * 1000;
+    }
+
+    componentDidMount() {
+      // console.log('this.tmp: ' + this.tmp);
+      this.setState({ key: this.tmp });
     }
 
     // Filters the displayed sentences based on the slider threshold number
@@ -353,9 +368,13 @@ $(() => {
       });
       
       let sentences = _.map(filtered, (obj) => {
+        let currentKey = this.setKey(obj['score']);
+        // console.log(currentKey);
+        this.tmp.push(currentKey);
         return(
           <span 
             id={obj['score']}
+            key={obj['score']}
             value={obj['normScore']}
             className="sentence-span"
           >
@@ -399,7 +418,8 @@ $(() => {
     constructor() {
       super();
       this.state = {
-        articles: []
+        articles: [],
+        waiting: true
       };
     }
 
@@ -410,7 +430,10 @@ $(() => {
         method: 'GET'
       })
       .done((articles) => {
-        this.setState({ articles: articles });
+        this.setState({ 
+          articles: articles,
+          waiting: false
+         });
       })
     }
 
@@ -420,7 +443,11 @@ $(() => {
       this.props.summaryCall(url, title);
     }
 
-    render() {
+    renderWaitingForArticles(){
+      return (<div>Waiting for articles :-/</div>)
+    }
+
+    renderArticles(){
       let articles = _.map(this.state.articles, (article) => {
         return(
           <div className="article-container">
@@ -454,6 +481,14 @@ $(() => {
           />
         </div>
       );
+    }
+
+    render() {
+      if(this.state.waiting){
+        return this.renderWaitingForArticles();
+      }else{
+        return this.renderArticles();
+      }
     }
   };
 
