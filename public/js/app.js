@@ -204,6 +204,7 @@ $(() => {
             dict={this.state.dict}
             changeThresh={this.handleThresholdChange}
             threshold={this.state.threshold}
+            changeTab={this.changeTab}
           />
         </div>
       );
@@ -270,6 +271,7 @@ $(() => {
               changePocket={this.props.changePocket.bind(this)}
               pocketIsAuthed={this.props.pocketIsAuthed}
               summaryCall={this.props.summaryCall.bind(this)}
+              changeTab={this.props.changeTab}
             />
           : null}
 
@@ -421,10 +423,10 @@ $(() => {
         articles: [],
         waiting: true
       };
+      this.getArticles = this.getArticles.bind(this);
     }
 
-    // Grabs the latest pocket articles in the DB and updates the state before render
-    componentWillMount() {
+    getArticles() {
       $.ajax({
         url: '/users/articles',
         method: 'GET'
@@ -434,7 +436,12 @@ $(() => {
           articles: articles,
           waiting: false
          });
-      })
+      });
+    }
+
+    // Grabs the latest pocket articles in the DB and updates the state before render
+    componentWillMount() {
+      this.getArticles();
     }
 
     // Calls summarize on the article when the summary button is clicked
@@ -444,7 +451,7 @@ $(() => {
     }
 
     renderWaitingForArticles(){
-      return (<div>Waiting for articles :-/</div>)
+      return (<div>Waiting for articles...</div>)
     }
 
     renderArticles(){
@@ -478,6 +485,8 @@ $(() => {
           <PocketAuthBtn 
             changePocket={this.props.changePocket.bind(this)}
             pocketIsAuthed={this.props.pocketIsAuthed}
+            changeTab={this.props.changeTab}
+            getArticles={this.getArticles}
           />
         </div>
       );
@@ -514,6 +523,10 @@ $(() => {
       $.ajax({
         url: '/users/pocket_articles',
         method: 'GET'
+      })
+      .done(() => {
+        console.log('finished grabbing articles');
+        this.props.getArticles();
       });
     }
 
