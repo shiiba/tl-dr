@@ -245,8 +245,11 @@ $(() => {
 
     render() {
       return(
-        <li className={this.props.isCurrent ? 'current' : null}>
-          <div onClick={this.handleClick.bind(this)} >
+        <li 
+          className={this.props.isCurrent ? 'current' : null}
+          onClick={this.handleClick.bind(this)}
+        >
+          <div>
             {this.props.name}
           </div>
         </li>
