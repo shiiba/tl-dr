@@ -358,7 +358,7 @@ $(() => {
     }
 
     setKey(score) {
-      return this.state.key.indexOf(score) > -1 ? score : score + Math.random() * 1000;
+      return this.state.key.indexOf(score) === -1 ? score : score + Math.random() * 1000;
     }
 
     componentDidMount() {
