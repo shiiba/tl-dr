@@ -1,4 +1,4 @@
-# TL:DR
+# TL;DR (Too Long; Didn't Read)
 A Summarization App for your Pocket Queue 
 
 [Link to TL;DR](http://tl-dr-app.herokuapp.com/) | **username**: test , **password**: test
