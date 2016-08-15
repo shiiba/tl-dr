@@ -13,15 +13,15 @@ module.exports = {
   module: {
     loaders: [{
       exclude: /node_modules/,
-      loader: 'babel'
+      loader: 'babel-loader'
     },
     {
-      test: /\.scss$/,
-      loaders: ["style", "css", "sass"]
+      test: /\.css$/,
+      loader: 'style-loader!css-loader'
     }]
   },
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['', '.js', '.jsx']
   },
   plugins: [
     new WebpackNotifierPlugin({title: 'Webpack'}),

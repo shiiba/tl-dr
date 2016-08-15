@@ -1,41 +1,13 @@
-// Converts TF-IDF algorithm output ('sentence': 'score'), to correctly named k:v pairs (uses underscore.js)
-function setDictObjs(dictionary){
-  let tmp = _.mapObject(dictionary, (val, key) => {
-    return({
-      'sentence': key,
-      'score': val
-    });
-  })
-  return tmp;
-};
+import React from 'react';
+import ReactDOM from 'react-dom';
+import $ from 'jquery';
+import _ from 'underscore';
+import * as dict from './helpers/dictionary.js';
+import styles from '../public/css/styles.css';
 
-// Creates an array of objects out of a nested object
-function createArray(dictionary) {
-  let tmp = [];
-  _.each(dictionary, (obj) => {
-    tmp.push(obj);
-  });
-  return tmp;
-};
 
-// Finds the min and max score of sentences and returns them
-function minAndMax(dictionary) {
-  let min, max = 0;
-  max = _.max(dictionary, (sent) => { return sent.score }).score;
-  min = _.min(dictionary, (sent) => { return sent.score }).score;
-  return { max: max, min: min };
-}
 
-// Normalizes the scores on a scale of 0 to 1 and add it to the object
-function normalize(dictionary) {
-  let minMax = minAndMax(dictionary);
-  let normalized = _.map(dictionary, (obj) => {
-    let norm = ((obj['score'] - minMax.min) / (minMax.max - minMax.min));
-    let normScore = { 'normScore': norm };
-    return _.extend(obj, normScore);
-  });
-  return normalized;
-};
+
 
 // Using React with ES6 Syntax
 $(() => {
@@ -157,8 +129,8 @@ $(() => {
         method: 'POST',
         data: { url: url },
         success: (data) => {
-          let dictionary = createArray(setDictObjs(data.dictionary));
-          let norm = normalize(dictionary);
+          let dictionary = dict.createArray(dict.setDictObjs(data.dictionary));
+          let norm = dict.normalize(dictionary);
           // console.log(norm);
           let title = existingTitle ? existingTitle : data.title;
           this.setState({ 
@@ -166,10 +138,12 @@ $(() => {
             currentTab: 3,
             title: title
           });
-        }.bind(this),
+        },
+        // }.bind(this),
         error: (xhr, status, err) => {
           console.error(status, err.toString());
-        }.bind(this)
+        }
+        // }.bind(this)
       });
     }
 
@@ -600,10 +574,12 @@ $(() => {
           Cookies.set('userId', data.userId);
           // console.log(data);
           this.props.changeLogin(data.token);
-        }.bind(this),
+        },
+        // }.bind(this),
         error: (xhr, status, err) => {
           console.error(status, err.toString());
-        }.bind(this),
+        }
+        // }.bind(this),
       });
     }
 
@@ -682,10 +658,12 @@ $(() => {
           console.log("A new user signed up!");
           console.log(data);
           this.handleSignupAuthentication(username, password);
-        }.bind(this),
+        },
+        // }.bind(this),
         error: (xhr, status, err) => {
           console.error(status, err.toString());
-        }.bind(this)
+        }
+        // }.bind(this)
       });
     }
 
@@ -708,10 +686,12 @@ $(() => {
           Cookies.set('jwt_token', data.token);
           Cookies.set('userId', data.userId);
           callback();
-        }.bind(this),
+        },
+        // }.bind(this),
         error: (xhr, status, err) => {
           console.error(status, err.toString());
-        }.bind(this)
+        }
+        // }.bind(this)
       });
     }
 
