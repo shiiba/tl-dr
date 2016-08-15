@@ -1,12 +1,13 @@
 // Requirements
-var express = require('express');
-var app = express();
-var logger = require('morgan');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var methodOverride = require('method-override');
-var mongoose = require('mongoose');
-var port = process.env.PORT || 3000;
+const express = require('express');
+const app = express();
+const logger = require('morgan');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const methodOverride = require('method-override');
+const mongoose = require('mongoose');
+const webPackMiddleware = require('./tasks.js');
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(logger('dev'));
@@ -16,24 +17,25 @@ app.use(express.static('public'));
 app.use(cookieParser());
 app.use(methodOverride((req, res) => {
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-    var method = req.body._method;
+    const method = req.body._method;
     delete req.body._method;
     return method;
   }
 }));
+app.use(webPackMiddleware);
 
 // Database
-var mongoUri = process.env.MONGODB_URI || "mongodb://localhost/tldr_dev";
+const mongoUri = process.env.MONGODB_URI || "mongodb://localhost/tldr_dev";
 mongoose.connect(mongoUri);
 
 // Controllers
-var usersController = require('./controllers/users.js');
+const usersController = require('./controllers/users.js');
 app.use('/users', usersController);
 
-var authController = require('./controllers/auth.js');
+const authController = require('./controllers/auth.js');
 app.use('/auth', authController);
 
-var summaryController = require('./controllers/summary.js');
+const summaryController = require('./controllers/summary.js');
 app.use('/summarize', summaryController);
 
 // Listen
