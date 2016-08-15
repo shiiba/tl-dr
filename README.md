@@ -5,7 +5,7 @@ A Summarization App for your Pocket Queue
 
 ### Description
 Final project for General Assembly's Web Development Immersive. 
-A Node.js & React.js application that allows a user to connect their Pocket account and auto-summarize / compress the number of sentences in the article for faster reading. Uses an implementation of [TF-IDF](https://en.wikipedia.org/wiki/Tf–idf) (term frequency - inverse document frequency) to determine the relative importance of sentences.
+A Node.js & React.js application that allows a user to connect their Pocket account and auto-summarize / compress the number of sentences in the article for faster reading. Uses [TF-IDF](https://en.wikipedia.org/wiki/Tf–idf) (term frequency - inverse document frequency) to determine the relative importance of sentences.
 
 Articles URLs are scraped and individual sentences within the article are given a score via TF-IDF. Use the slider at the bottom of the summary to adjust the threshold and compress / expand the article (left for compressed, right for expanded). When expanding, sentences appear by next-most-important score. 
 
@@ -22,6 +22,7 @@ Articles URLs are scraped and individual sentences within the article are given 
 - Passport (User Auth)
 - Pocket API OAuth
 - Mongoose (MongoDB)
+- Modified Node-TLDR module
 
 ### Features
 - Summarization using TF-IDF (term frequency - inverse document frequency) algorithm
