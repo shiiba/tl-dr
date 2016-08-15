@@ -1,5 +1,6 @@
 const path = require("path");
 const WebpackNotifierPlugin = require('webpack-notifier');
+const Webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -18,6 +19,10 @@ module.exports = {
     {
       test: /\.css$/,
       loader: 'style-loader!css-loader'
+    },
+    { 
+      test: /\.html$/, 
+      loader: "underscore-template-loader" 
     }]
   },
   resolve: {
@@ -25,6 +30,11 @@ module.exports = {
   },
   plugins: [
     new WebpackNotifierPlugin({title: 'Webpack'}),
+    new Webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery"
+    })
   ],
   devServer: {
     contentBase: './public'

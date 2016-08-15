@@ -71,15 +71,21 @@
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _dictionary = __webpack_require__(178);
-
-	var dict = _interopRequireWildcard(_dictionary);
-
-	var _styles = __webpack_require__(179);
+	var _styles = __webpack_require__(178);
 
 	var _styles2 = _interopRequireDefault(_styles);
 
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	var _summary_search = __webpack_require__(182);
+
+	var _summary_search2 = _interopRequireDefault(_summary_search);
+
+	var _signup_form = __webpack_require__(191);
+
+	var _signup_form2 = _interopRequireDefault(_signup_form);
+
+	var _login_form = __webpack_require__(192);
+
+	var _login_form2 = _interopRequireDefault(_login_form);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -89,1053 +95,141 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	// Using React with ES6 Syntax
-	(0, _jquery2.default)(function () {
+	// Main React parent component that maintains authenticated states and displays
+	// logged-in or logged-out experiences
+	var Application = function (_React$Component) {
+	  _inherits(Application, _React$Component);
 
-	  // Main React parent component that maintains authenticated states and displays
-	  // logged-in or logged-out experiences
-	  var Application = function (_React$Component) {
-	    _inherits(Application, _React$Component);
+	  function Application(props) {
+	    _classCallCheck(this, Application);
 
-	    function Application() {
-	      _classCallCheck(this, Application);
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Application).call(this, props));
 
-	      var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Application).call(this));
+	    _this.state = {
+	      authenticatedUser: document.cookie ? true : '',
+	      pocketAuth: false
+	    };
+	    return _this;
+	  }
 
-	      _this.state = {
-	        authenticatedUser: document.cookie ? true : '',
+	  // Sets state which determines whether login/signup is displayed
+
+
+	  _createClass(Application, [{
+	    key: 'changeLogin',
+	    value: function changeLogin() {
+	      console.log('change login');
+	      this.setState({ authenticatedUser: true });
+	    }
+
+	    // Sets state which determines whether pocket connect or fetch btn appears
+
+	  }, {
+	    key: 'changePocket',
+	    value: function changePocket(val) {
+	      console.log('changing pocketAuth: ');
+	      console.log(val);
+	      this.setState({ pocketAuth: val });
+	    }
+
+	    // Logs the user out, resets state, and removes cookies
+
+	  }, {
+	    key: 'handleReset',
+	    value: function handleReset() {
+	      Cookies.remove('jwt_token');
+	      Cookies.remove('connect.sid');
+	      Cookies.remove('userId');
+	      this.setState({
+	        authenticatedUser: '',
 	        pocketAuth: false
-	      };
-	      return _this;
+	      });
 	    }
-
-	    // Sets state which determines whether login/signup is displayed
-
-
-	    _createClass(Application, [{
-	      key: 'changeLogin',
-	      value: function changeLogin() {
-	        console.log('change login');
-	        this.setState({ authenticatedUser: true });
-	      }
-
-	      // Sets state which determines whether pocket connect or fetch btn appears
-
-	    }, {
-	      key: 'changePocket',
-	      value: function changePocket(val) {
-	        console.log('changing pocketAuth: ');
-	        console.log(val);
-	        this.setState({ pocketAuth: val });
-	      }
-
-	      // Logs the user out, resets state, and removes cookies
-
-	    }, {
-	      key: 'handleReset',
-	      value: function handleReset() {
-	        Cookies.remove('jwt_token');
-	        Cookies.remove('connect.sid');
-	        Cookies.remove('userId');
-	        this.setState({
-	          authenticatedUser: '',
-	          pocketAuth: false
-	        });
-	      }
-	    }, {
-	      key: 'renderMainApp',
-	      value: function renderMainApp() {
-	        if (this.state.authenticatedUser === true) {
-	          return _react2.default.createElement(
-	            'div',
-	            { className: 'logged-in all' },
-	            _react2.default.createElement(SummarySearch, {
-	              pocketIsAuthed: this.state.pocketAuth,
-	              changePocket: this.changePocket.bind(this)
-	            })
-	          );
-	        } else {
-	          return _react2.default.createElement(
-	            'div',
-	            { className: 'logged-out' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'auth-container' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'signup' },
-	                _react2.default.createElement(SignupForm, {
-	                  changeLogin: this.changeLogin.bind(this)
-	                })
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'login' },
-	                _react2.default.createElement(LoginForm, {
-	                  changeLogin: this.changeLogin.bind(this)
-	                })
-	              )
-	            )
-	          );
-	        }
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
+	  }, {
+	    key: 'renderMainApp',
+	    value: function renderMainApp() {
+	      if (this.state.authenticatedUser === true) {
 	        return _react2.default.createElement(
 	          'div',
-	          { className: 'parent-container' },
-	          _react2.default.createElement(
-	            'header',
-	            null,
-	            _react2.default.createElement(
-	              'nav',
-	              null,
-	              _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'header-text' },
-	                  'TL;DR'
-	                ),
-	                ' – A Summarization App'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                {
-	                  className: this.state.authenticatedUser === true ? "logout" : "hidden",
-	                  onClick: this.handleReset.bind(this)
-	                },
-	                'Logout'
-	              )
-	            )
-	          ),
-	          this.renderMainApp()
-	        );
-	      }
-	    }]);
-
-	    return Application;
-	  }(_react2.default.Component);
-
-	  ;
-
-	  // Main logged-in component that holds summarized content and tabbed navigation 
-	  // state, and makes AJAX calls to the summarization algorithm
-
-	  var SummarySearch = function (_React$Component2) {
-	    _inherits(SummarySearch, _React$Component2);
-
-	    function SummarySearch() {
-	      _classCallCheck(this, SummarySearch);
-
-	      var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(SummarySearch).call(this));
-
-	      var tabList = [{ id: 1, name: 'URL Search' }, { id: 2, name: 'Pocket Articles' }, { id: 3, name: 'Summary' }];
-	      _this2.state = {
-	        title: 'No Article Found. Summarize Something!',
-	        dict: [],
-	        threshold: 0.5,
-	        tabList: tabList,
-	        currentTab: 1
-	      };
-	      _this2.getSummary = _this2.getSummary.bind(_this2);
-	      _this2.changeTab = _this2.changeTab.bind(_this2);
-	      _this2.handleThresholdChange = _this2.handleThresholdChange.bind(_this2);
-	      return _this2;
-	    }
-
-	    // AJAX call to the summary controller and summarization module; sets state
-	    // up at the parent component with the returned scored dictionary
-
-
-	    _createClass(SummarySearch, [{
-	      key: 'getSummary',
-	      value: function getSummary(url, existingTitle) {
-	        var _this3 = this;
-
-	        _jquery2.default.ajax({
-	          url: '/summarize',
-	          method: 'POST',
-	          data: { url: url },
-	          success: function success(data) {
-	            var dictionary = dict.createArray(dict.setDictObjs(data.dictionary));
-	            var norm = dict.normalize(dictionary);
-	            // console.log(norm);
-	            var title = existingTitle ? existingTitle : data.title;
-	            _this3.setState({
-	              dict: norm,
-	              currentTab: 3,
-	              title: title
-	            });
-	          },
-	          // }.bind(this),
-	          error: function error(xhr, status, err) {
-	            console.error(status, err.toString());
-	          }
-	          // }.bind(this)
-	        });
-	      }
-
-	      // Sets state of the current tab
-
-	    }, {
-	      key: 'changeTab',
-	      value: function changeTab(tab) {
-	        this.setState({ currentTab: tab.id });
-	      }
-
-	      // Sets state of the threshold based on HTML range slider, which filters sentences
-
-	    }, {
-	      key: 'handleThresholdChange',
-	      value: function handleThresholdChange(num) {
-	        // console.log('threshold changing: ' + num);
-	        // console.log(this.state);
-	        this.setState({ threshold: num });
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        return _react2.default.createElement(
-	          'div',
-	          { className: 'app-container' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'tabs-container' },
-	            _react2.default.createElement(Tabs, {
-	              currentTab: this.state.currentTab,
-	              tabList: this.state.tabList,
-	              changeTab: this.changeTab
-	            })
-	          ),
-	          _react2.default.createElement(Content, {
-	            currentTab: this.state.currentTab,
-	            summaryCall: this.getSummary,
-	            changePocket: this.props.changePocket,
-	            pocketIsAuthed: this.props.pocketIsAuthed,
-	            title: this.state.title,
-	            dict: this.state.dict,
-	            changeThresh: this.handleThresholdChange,
-	            threshold: this.state.threshold,
-	            changeTab: this.changeTab
+	          { className: 'logged-in all' },
+	          _react2.default.createElement(_summary_search2.default, {
+	            pocketIsAuthed: this.state.pocketAuth,
+	            changePocket: this.changePocket.bind(this)
 	          })
 	        );
-	      }
-	    }]);
-
-	    return SummarySearch;
-	  }(_react2.default.Component);
-
-	  ;
-
-	  // Tabs component that generates three tab child components
-
-	  var Tabs = function (_React$Component3) {
-	    _inherits(Tabs, _React$Component3);
-
-	    function Tabs() {
-	      _classCallCheck(this, Tabs);
-
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(Tabs).apply(this, arguments));
-	    }
-
-	    _createClass(Tabs, [{
-	      key: 'handleClick',
-	      value: function handleClick(tab) {
-	        this.props.changeTab(tab);
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        var _this5 = this;
-
-	        var tab = this.props.tabList.map(function (tab) {
-	          return _react2.default.createElement(Tab, {
-	            handleClick: _this5.handleClick.bind(_this5, tab),
-	            key: tab.id,
-	            name: tab.name,
-	            isCurrent: _this5.props.currentTab === tab.id
-	          });
-	        });
+	      } else {
 	        return _react2.default.createElement(
-	          'ul',
-	          null,
-	          tab
-	        );
-	      }
-	    }]);
-
-	    return Tabs;
-	  }(_react2.default.Component);
-
-	  ;
-
-	  // Tab component that generates individual tab; when clicked, switches tabs
-
-	  var Tab = function (_React$Component4) {
-	    _inherits(Tab, _React$Component4);
-
-	    function Tab() {
-	      _classCallCheck(this, Tab);
-
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(Tab).apply(this, arguments));
-	    }
-
-	    _createClass(Tab, [{
-	      key: 'handleClick',
-	      value: function handleClick(e) {
-	        e.preventDefault();
-	        this.props.handleClick();
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        return _react2.default.createElement(
-	          'li',
-	          {
-	            className: this.props.isCurrent ? 'current' : null,
-	            onClick: this.handleClick.bind(this)
-	          },
+	          'div',
+	          { className: 'logged-out' },
 	          _react2.default.createElement(
 	            'div',
-	            null,
-	            this.props.name
-	          )
-	        );
-	      }
-	    }]);
-
-	    return Tab;
-	  }(_react2.default.Component);
-
-	  // Contains the main content – search, articles list, and summary display
-	  // conditionally rendered based on currentTab props
-
-
-	  var Content = function (_React$Component5) {
-	    _inherits(Content, _React$Component5);
-
-	    function Content() {
-	      _classCallCheck(this, Content);
-
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(Content).apply(this, arguments));
-	    }
-
-	    _createClass(Content, [{
-	      key: 'render',
-	      value: function render() {
-	        return _react2.default.createElement(
-	          'div',
-	          { className: 'content' },
-	          this.props.currentTab === 1 ? _react2.default.createElement(UrlSearch, {
-	            summaryCall: this.props.summaryCall.bind(this)
-	          }) : null,
-	          this.props.currentTab === 2 ? _react2.default.createElement(ArticlesList, {
-	            changePocket: this.props.changePocket.bind(this),
-	            pocketIsAuthed: this.props.pocketIsAuthed,
-	            summaryCall: this.props.summaryCall.bind(this),
-	            changeTab: this.props.changeTab
-	          }) : null,
-	          this.props.currentTab === 3 ? _react2.default.createElement(SummaryDisplay, {
-	            title: this.props.title,
-	            dict: this.props.dict,
-	            changeThresh: this.props.changeThresh.bind(this),
-	            threshold: this.props.threshold
-	          }) : null
-	        );
-	      }
-	    }]);
-
-	    return Content;
-	  }(_react2.default.Component);
-
-	  ;
-
-	  // Component that allows you to search and summarize by URL
-
-	  var UrlSearch = function (_React$Component6) {
-	    _inherits(UrlSearch, _React$Component6);
-
-	    function UrlSearch() {
-	      _classCallCheck(this, UrlSearch);
-
-	      var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(UrlSearch).call(this));
-
-	      _this8.state = { tempUrl: null };
-	      return _this8;
-	    }
-
-	    // Maintains temporary URL storage
-
-
-	    _createClass(UrlSearch, [{
-	      key: 'handleSearchChange',
-	      value: function handleSearchChange(e) {
-	        // console.log(e.target.value);
-	        this.setState({ tempUrl: e.target.value });
-	      }
-
-	      // Passes temporary URL state to the summarization AJAX call from its parent
-
-	    }, {
-	      key: 'handleSubmit',
-	      value: function handleSubmit(e) {
-	        e.preventDefault();
-	        this.props.summaryCall(this.state.tempUrl);
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        return _react2.default.createElement(
-	          'div',
-	          {
-	            className: 'search-bar'
-	          },
-	          _react2.default.createElement(
-	            'form',
-	            {
-	              onSubmit: this.handleSubmit.bind(this)
-	            },
-	            _react2.default.createElement(
-	              'label',
-	              null,
-	              'Paste a URL to Summarize:'
-	            ),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement('input', {
-	              className: 'url-search-form',
-	              type: 'text'
-	              // value={} 
-	              , placeholder: 'Paste a URL',
-	              onChange: this.handleSearchChange.bind(this)
-	            }),
-	            _react2.default.createElement(
-	              'button',
-	              {
-	                className: 'sum-btn'
-	              },
-	              'Summarize'
-	            )
-	          )
-	        );
-	      }
-	    }]);
-
-	    return UrlSearch;
-	  }(_react2.default.Component);
-
-	  ;
-
-	  // Displays the summarized text, filtered by the slider threshold
-
-	  var SummaryDisplay = function (_React$Component7) {
-	    _inherits(SummaryDisplay, _React$Component7);
-
-	    function SummaryDisplay() {
-	      _classCallCheck(this, SummaryDisplay);
-
-	      var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(SummaryDisplay).call(this));
-
-	      _this9.state = { key: [] };
-	      _this9.tmp = [];
-	      return _this9;
-	    }
-
-	    // Sets the threshold state in parent component as the slider moves
-
-
-	    _createClass(SummaryDisplay, [{
-	      key: 'handleSlider',
-	      value: function handleSlider(e) {
-	        console.log('threshold in child component: ' + e.target.value);
-	        // console.log(this.props);
-	        this.props.changeThresh(e.target.value);
-	      }
-	    }, {
-	      key: 'setKey',
-	      value: function setKey(score) {
-	        return this.state.key.indexOf(score) === -1 ? score : score + Math.random() * 1000;
-	      }
-	    }, {
-	      key: 'componentDidMount',
-	      value: function componentDidMount() {
-	        // console.log('this.tmp: ' + this.tmp);
-	        this.setState({ key: this.tmp });
-	      }
-
-	      // Filters the displayed sentences based on the slider threshold number
-
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        var _this10 = this;
-
-	        var filtered = _underscore2.default.filter(this.props.dict, function (obj) {
-	          return obj['normScore'] <= _this10.props.threshold;
-	        });
-
-	        var sentences = _underscore2.default.map(filtered, function (obj) {
-	          var currentKey = _this10.setKey(obj['score']);
-	          // console.log(currentKey);
-	          _this10.tmp.push(currentKey);
-	          return _react2.default.createElement(
-	            'span',
-	            {
-	              id: obj['score'],
-	              key: obj['score'],
-	              value: obj['normScore'],
-	              className: 'sentence-span'
-	            },
-	            obj['sentence']
-	          );
-	        });
-
-	        return _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'summary-container' },
+	            { className: 'auth-container' },
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'summary-title' },
-	              this.props.title
+	              { className: 'signup' },
+	              _react2.default.createElement(_signup_form2.default, {
+	                changeLogin: this.changeLogin.bind(this)
+	              })
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'summary-text' },
-	              sentences
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            {
-	              className: 'slider-container',
-	              id: 'footer'
-	            },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'slider-second-container' },
-	              _react2.default.createElement('input', {
-	                type: 'range',
-	                min: '0.3',
-	                max: '1',
-	                step: '.0001',
-	                onInput: this.handleSlider.bind(this),
-	                className: 'slider'
+	              { className: 'login' },
+	              _react2.default.createElement(_login_form2.default, {
+	                changeLogin: this.changeLogin.bind(this)
 	              })
 	            )
 	          )
 	        );
 	      }
-	    }]);
-
-	    return SummaryDisplay;
-	  }(_react2.default.Component);
-
-	  ;
-
-	  // Contains User's Pocket account details, fetches articles, stores and displays them
-
-	  var ArticlesList = function (_React$Component8) {
-	    _inherits(ArticlesList, _React$Component8);
-
-	    function ArticlesList() {
-	      _classCallCheck(this, ArticlesList);
-
-	      var _this11 = _possibleConstructorReturn(this, Object.getPrototypeOf(ArticlesList).call(this));
-
-	      _this11.state = {
-	        articles: [],
-	        waiting: true
-	      };
-	      _this11.getArticles = _this11.getArticles.bind(_this11);
-	      return _this11;
 	    }
-
-	    _createClass(ArticlesList, [{
-	      key: 'getArticles',
-	      value: function getArticles() {
-	        var _this12 = this;
-
-	        _jquery2.default.ajax({
-	          url: '/users/articles',
-	          method: 'GET'
-	        }).done(function (articles) {
-	          _this12.setState({
-	            articles: articles,
-	            waiting: false
-	          });
-	        });
-	      }
-
-	      // Grabs the latest pocket articles in the DB and updates the state before render
-
-	    }, {
-	      key: 'componentWillMount',
-	      value: function componentWillMount() {
-	        this.getArticles();
-	      }
-
-	      // Calls summarize on the article when the summary button is clicked
-
-	    }, {
-	      key: 'getSummary',
-	      value: function getSummary(url, title) {
-	        console.log(url);
-	        this.props.summaryCall(url, title);
-	      }
-	    }, {
-	      key: 'renderWaitingForArticles',
-	      value: function renderWaitingForArticles() {
-	        return _react2.default.createElement(
-	          'div',
-	          null,
-	          'Waiting for articles...'
-	        );
-	      }
-	    }, {
-	      key: 'renderArticles',
-	      value: function renderArticles() {
-	        var _this13 = this;
-
-	        var articles = _underscore2.default.map(this.state.articles, function (article) {
-	          return _react2.default.createElement(
-	            'div',
-	            { className: 'article-container' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'article-info-container' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'article-title' },
-	                article.resolvedTitle
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'article-wordcount' },
-	                'Word Count: ',
-	                article.wordCount
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'article-btn-container' },
-	              _react2.default.createElement(
-	                'button',
-	                {
-	                  onClick: function onClick() {
-	                    return _this13.getSummary(article.resolvedUrl, article.resolvedTitle);
-	                  },
-	                  className: 'article-btn'
-	                },
-	                'Summarize'
-	              )
-	            )
-	          );
-	        });
-	        return _react2.default.createElement(
-	          'div',
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'parent-container' },
+	        _react2.default.createElement(
+	          'header',
 	          null,
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'articles-container' },
-	            articles
-	          ),
-	          _react2.default.createElement(PocketAuthBtn, {
-	            changePocket: this.props.changePocket.bind(this),
-	            pocketIsAuthed: this.props.pocketIsAuthed,
-	            changeTab: this.props.changeTab,
-	            getArticles: this.getArticles
-	          })
-	        );
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        if (this.state.waiting) {
-	          return this.renderWaitingForArticles();
-	        } else {
-	          return this.renderArticles();
-	        }
-	      }
-	    }]);
-
-	    return ArticlesList;
-	  }(_react2.default.Component);
-
-	  ;
-
-	  // Conditionally displays Pocket OAuth or Fetch Articles buttons
-
-	  var PocketAuthBtn = function (_React$Component9) {
-	    _inherits(PocketAuthBtn, _React$Component9);
-
-	    function PocketAuthBtn() {
-	      _classCallCheck(this, PocketAuthBtn);
-
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(PocketAuthBtn).apply(this, arguments));
-	    }
-
-	    _createClass(PocketAuthBtn, [{
-	      key: 'componentWillMount',
-
-
-	      // Checks to see if the user is already auth'd with Pocket
-	      value: function componentWillMount() {
-	        var _this15 = this;
-
-	        _jquery2.default.ajax({
-	          url: '/users/pocket_auth',
-	          method: 'GET'
-	        }).done(function (val) {
-	          // console.log('componentWillMount pocket check value: ');
-	          // console.log(val);
-	          _this15.props.changePocket(val);
-	        });
-	      }
-
-	      // AJAX call to users controller that queries the Pocket API and grabs a 
-	      // users's latest 30 articles; stores them in the DB
-
-	    }, {
-	      key: 'getPocketArticles',
-	      value: function getPocketArticles() {
-	        var _this16 = this;
-
-	        _jquery2.default.ajax({
-	          url: '/users/pocket_articles',
-	          method: 'GET'
-	        }).done(function () {
-	          console.log('finished grabbing articles');
-	          _this16.props.getArticles();
-	        });
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        if (this.props.pocketIsAuthed === true) {
-	          return _react2.default.createElement(
-	            'div',
-	            { className: 'fetch-btn' },
-	            _react2.default.createElement(
-	              'button',
-	              {
-	                onClick: this.getPocketArticles.bind(this)
-	              },
-	              'Fetch Pocket Articles'
-	            )
-	          );
-	        } else {
-	          return _react2.default.createElement(
-	            'div',
+	            'nav',
 	            null,
 	            _react2.default.createElement(
-	              'span',
+	              'div',
 	              null,
-	              'Connect Your Pocket Account:'
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'header-text' },
+	                'TL;DR'
+	              ),
+	              ' – A Summarization App'
 	            ),
 	            _react2.default.createElement(
-	              'a',
-	              { href: './auth/pocket', className: 'button' },
-	              'Connect'
+	              'div',
+	              {
+	                className: this.state.authenticatedUser === true ? "logout" : "hidden",
+	                onClick: this.handleReset.bind(this)
+	              },
+	              'Logout'
 	            )
-	          );
-	        }
-	      }
-	    }]);
-
-	    return PocketAuthBtn;
-	  }(_react2.default.Component);
-
-	  ;
-
-	  // Login form
-
-	  var LoginForm = function (_React$Component10) {
-	    _inherits(LoginForm, _React$Component10);
-
-	    function LoginForm() {
-	      _classCallCheck(this, LoginForm);
-
-	      var _this17 = _possibleConstructorReturn(this, Object.getPrototypeOf(LoginForm).call(this));
-
-	      _this17.state = {
-	        username: '',
-	        password: ''
-	      };
-	      return _this17;
-	    }
-
-	    // Stores current login form values in state
-
-
-	    _createClass(LoginForm, [{
-	      key: 'handleLoginFormChange',
-	      value: function handleLoginFormChange(stateName, e) {
-	        var change = {};
-	        change[stateName] = e.target.value;
-	        this.setState(change);
-	      }
-
-	      // Trims the inputs and hits the login AJAX method
-
-	    }, {
-	      key: 'handleSubmit',
-	      value: function handleSubmit(e) {
-	        e.preventDefault();
-	        var username = this.state.username.trim();
-	        var password = this.state.password.trim();
-	        // console.log('username: ' + username);
-	        // console.log('password: ' + password);
-	        this.loginAJAX(username, password);
-	      }
-
-	      // Hits the auth controller and logs the user in
-
-	    }, {
-	      key: 'loginAJAX',
-	      value: function loginAJAX(username, password) {
-	        var _this18 = this;
-
-	        // console.log('login AJAX hit');
-	        // console.log(username);
-	        // console.log(password);
-	        _jquery2.default.ajax({
-	          url: "/auth",
-	          method: "POST",
-	          data: {
-	            username: username,
-	            password: password
-	          },
-	          success: function success(data) {
-	            // console.log('successful login ajax call');
-	            Cookies.set('jwt_token', data.token);
-	            Cookies.set('userId', data.userId);
-	            // console.log(data);
-	            _this18.props.changeLogin(data.token);
-	          },
-	          // }.bind(this),
-	          error: function error(xhr, status, err) {
-	            console.error(status, err.toString());
-	          }
-	          // }.bind(this),
-	        });
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        return _react2.default.createElement(
-	          'div',
-	          { className: 'login-form' },
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            'Please Login'
-	          ),
-	          _react2.default.createElement(
-	            'form',
-	            { onSubmit: this.handleSubmit.bind(this) },
-	            _react2.default.createElement(
-	              'label',
-	              { htmlFor: 'username' },
-	              'Username:'
-	            ),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement('input', {
-	              className: 'username-login-form',
-	              type: 'text',
-	              value: this.state.username,
-	              onChange: this.handleLoginFormChange.bind(this, 'username')
-	            }),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement(
-	              'label',
-	              { htmlFor: 'password' },
-	              'Password:'
-	            ),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement('input', {
-	              className: 'password-login-form',
-	              type: 'password',
-	              value: this.state.password,
-	              onChange: this.handleLoginFormChange.bind(this, 'password')
-	            }),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement('input', {
-	              className: 'loginSubmit',
-	              type: 'submit'
-	            })
 	          )
-	        );
-	      }
-	    }]);
-
-	    return LoginForm;
-	  }(_react2.default.Component);
-
-	  // Signup form
-
-
-	  var SignupForm = function (_React$Component11) {
-	    _inherits(SignupForm, _React$Component11);
-
-	    function SignupForm() {
-	      _classCallCheck(this, SignupForm);
-
-	      var _this19 = _possibleConstructorReturn(this, Object.getPrototypeOf(SignupForm).call(this));
-
-	      _this19.state = {
-	        username: '',
-	        password: ''
-	      };
-	      return _this19;
+	        ),
+	        this.renderMainApp()
+	      );
 	    }
+	  }]);
 
-	    // Temporarily stores the form data in state
+	  return Application;
+	}(_react2.default.Component);
 
+	;
 
-	    _createClass(SignupForm, [{
-	      key: 'handleSignupFormChange',
-	      value: function handleSignupFormChange(setName, e) {
-	        var change = {};
-	        change[setName] = e.target.value;
-	        this.setState(change);
-	      }
-
-	      // Trims inputs and hits signup AJAX method
-
-	    }, {
-	      key: 'handleSubmit',
-	      value: function handleSubmit(e) {
-	        e.preventDefault();
-	        var username = this.state.username.trim();
-	        var password = this.state.password.trim();
-	        this.signupAJAX(username, password);
-	      }
-
-	      // POST request to users controller that creates the user in the DB and then
-	      // hits the auto-authentication method
-
-	    }, {
-	      key: 'signupAJAX',
-	      value: function signupAJAX(username, password) {
-	        var _this20 = this;
-
-	        console.log('sending signup post request');
-	        _jquery2.default.ajax({
-	          url: '/users/register',
-	          method: 'POST',
-	          data: {
-	            username: username,
-	            password: password
-	          },
-	          success: function success(data) {
-	            console.log("A new user signed up!");
-	            console.log(data);
-	            _this20.handleSignupAuthentication(username, password);
-	          },
-	          // }.bind(this),
-	          error: function error(xhr, status, err) {
-	            console.error(status, err.toString());
-	          }
-	          // }.bind(this)
-	        });
-	      }
-
-	      // Auto-authenticates users who sign up
-
-	    }, {
-	      key: 'handleSignupAuthentication',
-	      value: function handleSignupAuthentication(username, password) {
-	        var self = this;
-	        var callback = function callback() {
-	          self.props.changeLogin();
-	        };
-	        _jquery2.default.ajax({
-	          url: '/auth',
-	          method: 'POST',
-	          data: {
-	            username: username,
-	            password: password
-	          },
-	          success: function success(data) {
-	            // console.log('Token acquired.');
-	            // console.log(data);
-	            Cookies.set('jwt_token', data.token);
-	            Cookies.set('userId', data.userId);
-	            callback();
-	          },
-	          // }.bind(this),
-	          error: function error(xhr, status, err) {
-	            console.error(status, err.toString());
-	          }
-	          // }.bind(this)
-	        });
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        return _react2.default.createElement(
-	          'div',
-	          { className: 'signup-form' },
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            ' Create An Account '
-	          ),
-	          _react2.default.createElement(
-	            'form',
-	            {
-	              onSubmit: this.handleSubmit.bind(this)
-	            },
-	            _react2.default.createElement(
-	              'label',
-	              { htmlFor: 'username' },
-	              'Username:'
-	            ),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement('input', {
-	              className: 'username-create',
-	              type: 'text',
-	              onChange: this.handleSignupFormChange.bind(this, 'username')
-	            }),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement(
-	              'label',
-	              { htmlFor: 'password' },
-	              'Password:'
-	            ),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement('input', {
-	              className: 'password-create',
-	              type: 'password',
-	              onChange: this.handleSignupFormChange.bind(this, 'password')
-	            }),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement('input', {
-	              className: 'signupSubmit',
-	              type: 'submit'
-	            })
-	          )
-	        );
-	      }
-	    }]);
-
-	    return SignupForm;
-	  }(_react2.default.Component);
-
-	  // Main React Render function
-
-
-	  _reactDom2.default.render(_react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(Application, null)
-	  ), document.getElementById('container'));
-	});
+	// Main React Render function
+	_reactDom2.default.render(_react2.default.createElement(
+	  'div',
+	  null,
+	  _react2.default.createElement(Application, null)
+	), document.getElementById('container'));
 
 /***/ },
 /* 2 */
@@ -34183,76 +33277,13 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.setDictObjs = setDictObjs;
-	exports.createArray = createArray;
-	exports.normalize = normalize;
-
-	var _underscore = __webpack_require__(177);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// Converts TF-IDF algorithm output ('sentence': 'score'), to correctly named k:v pairs (uses underscore.js)
-	function setDictObjs(dictionary) {
-	  var tmp = _underscore2.default.mapObject(dictionary, function (val, key) {
-	    return {
-	      'sentence': key,
-	      'score': val
-	    };
-	  });
-	  return tmp;
-	};
-
-	// Creates an array of objects out of a nested object
-	function createArray(dictionary) {
-	  var tmp = [];
-	  _underscore2.default.each(dictionary, function (obj) {
-	    tmp.push(obj);
-	  });
-	  return tmp;
-	};
-
-	// Finds the min and max score of sentences and returns them
-	function minAndMax(dictionary) {
-	  var min = void 0,
-	      max = 0;
-	  max = _underscore2.default.max(dictionary, function (sent) {
-	    return sent.score;
-	  }).score;
-	  min = _underscore2.default.min(dictionary, function (sent) {
-	    return sent.score;
-	  }).score;
-	  return { max: max, min: min };
-	}
-
-	// Normalizes the scores on a scale of 0 to 1 and add it to the object
-	function normalize(dictionary) {
-	  var minMax = minAndMax(dictionary);
-	  var normalized = _underscore2.default.map(dictionary, function (obj) {
-	    var norm = (obj['score'] - minMax.min) / (minMax.max - minMax.min);
-	    var normScore = { 'normScore': norm };
-	    return _underscore2.default.extend(obj, normScore);
-	  });
-	  return normalized;
-	};
-
-/***/ },
-/* 179 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(180);
+	var content = __webpack_require__(179);
 	if (typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(182)(content, {});
+	var update = __webpack_require__(181)(content, {});
 	if (content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if (false) {
@@ -34271,10 +33302,10 @@
 	}
 
 /***/ },
-/* 180 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(181)();
+	exports = module.exports = __webpack_require__(180)();
 	// imports
 	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=PT+Serif:400,700);", ""]);
 
@@ -34285,7 +33316,7 @@
 
 
 /***/ },
-/* 181 */
+/* 180 */
 /***/ function(module, exports) {
 
 	/*
@@ -34341,7 +33372,7 @@
 
 
 /***/ },
-/* 182 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -34591,6 +33622,1274 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(176);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _tabs = __webpack_require__(183);
+
+	var _tabs2 = _interopRequireDefault(_tabs);
+
+	var _content = __webpack_require__(185);
+
+	var _content2 = _interopRequireDefault(_content);
+
+	var _dictionary = __webpack_require__(190);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Main logged-in component that holds summarized content and tabbed navigation 
+	// state, and makes AJAX calls to the summarization algorithm
+	var SummarySearch = function (_React$Component) {
+	  _inherits(SummarySearch, _React$Component);
+
+	  function SummarySearch(props) {
+	    _classCallCheck(this, SummarySearch);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SummarySearch).call(this, props));
+
+	    var tabList = [{ id: 1, name: 'URL Search' }, { id: 2, name: 'Pocket Articles' }, { id: 3, name: 'Summary' }];
+	    _this.state = {
+	      title: 'No Article Found. Summarize Something!',
+	      dict: [],
+	      threshold: 0.5,
+	      tabList: tabList,
+	      currentTab: 1
+	    };
+	    _this.getSummary = _this.getSummary.bind(_this);
+	    _this.changeTab = _this.changeTab.bind(_this);
+	    _this.handleThresholdChange = _this.handleThresholdChange.bind(_this);
+	    return _this;
+	  }
+
+	  // AJAX call to the summary controller and summarization module; sets state
+	  // up at the parent component with the returned scored dictionary
+
+
+	  _createClass(SummarySearch, [{
+	    key: 'getSummary',
+	    value: function getSummary(url, existingTitle) {
+	      var _this2 = this;
+
+	      _jquery2.default.ajax({
+	        url: '/summarize',
+	        method: 'POST',
+	        data: { url: url },
+	        success: function success(data) {
+	          var dictionary = (0, _dictionary.createArray)((0, _dictionary.setDictObjs)(data.dictionary));
+	          var norm = (0, _dictionary.normalize)(dictionary);
+	          // console.log(norm);
+	          var title = existingTitle ? existingTitle : data.title;
+	          _this2.setState({
+	            dict: norm,
+	            currentTab: 3,
+	            title: title
+	          });
+	        },
+	        // }.bind(this),
+	        error: function error(xhr, status, err) {
+	          console.error(status, err.toString());
+	        }
+	        // }.bind(this)
+	      });
+	    }
+
+	    // Sets state of the current tab
+
+	  }, {
+	    key: 'changeTab',
+	    value: function changeTab(tab) {
+	      this.setState({ currentTab: tab.id });
+	    }
+
+	    // Sets state of the threshold based on HTML range slider, which filters sentences
+
+	  }, {
+	    key: 'handleThresholdChange',
+	    value: function handleThresholdChange(num) {
+	      // console.log('threshold changing: ' + num);
+	      // console.log(this.state);
+	      this.setState({ threshold: num });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'app-container' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'tabs-container' },
+	          _react2.default.createElement(_tabs2.default, {
+	            currentTab: this.state.currentTab,
+	            tabList: this.state.tabList,
+	            changeTab: this.changeTab
+	          })
+	        ),
+	        _react2.default.createElement(_content2.default, {
+	          currentTab: this.state.currentTab,
+	          summaryCall: this.getSummary,
+	          changePocket: this.props.changePocket,
+	          pocketIsAuthed: this.props.pocketIsAuthed,
+	          title: this.state.title,
+	          dict: this.state.dict,
+	          changeThresh: this.handleThresholdChange,
+	          threshold: this.state.threshold,
+	          changeTab: this.changeTab
+	        })
+	      );
+	    }
+	  }]);
+
+	  return SummarySearch;
+	}(_react2.default.Component);
+
+	exports.default = SummarySearch;
+	;
+
+/***/ },
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _tab = __webpack_require__(184);
+
+	var _tab2 = _interopRequireDefault(_tab);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Tabs component that generates three tab child components
+	var Tabs = function (_React$Component) {
+	  _inherits(Tabs, _React$Component);
+
+	  function Tabs(props) {
+	    _classCallCheck(this, Tabs);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Tabs).call(this, props));
+	  }
+
+	  _createClass(Tabs, [{
+	    key: 'handleClick',
+	    value: function handleClick(tab) {
+	      this.props.changeTab(tab);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var tab = this.props.tabList.map(function (tab) {
+	        return _react2.default.createElement(_tab2.default, {
+	          handleClick: _this2.handleClick.bind(_this2, tab),
+	          key: tab.id,
+	          name: tab.name,
+	          isCurrent: _this2.props.currentTab === tab.id
+	        });
+	      });
+	      return _react2.default.createElement(
+	        'ul',
+	        null,
+	        tab
+	      );
+	    }
+	  }]);
+
+	  return Tabs;
+	}(_react2.default.Component);
+
+	exports.default = Tabs;
+	;
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Tab component that generates individual tab; when clicked, switches tabs
+	var Tab = function (_React$Component) {
+	  _inherits(Tab, _React$Component);
+
+	  function Tab(props) {
+	    _classCallCheck(this, Tab);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Tab).call(this, props));
+	  }
+
+	  _createClass(Tab, [{
+	    key: 'handleClick',
+	    value: function handleClick(e) {
+	      e.preventDefault();
+	      this.props.handleClick();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'li',
+	        {
+	          className: this.props.isCurrent ? 'current' : null,
+	          onClick: this.handleClick.bind(this)
+	        },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          this.props.name
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Tab;
+	}(_react2.default.Component);
+
+	exports.default = Tab;
+
+/***/ },
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _url_search = __webpack_require__(186);
+
+	var _url_search2 = _interopRequireDefault(_url_search);
+
+	var _articles_list = __webpack_require__(187);
+
+	var _articles_list2 = _interopRequireDefault(_articles_list);
+
+	var _summary_display = __webpack_require__(189);
+
+	var _summary_display2 = _interopRequireDefault(_summary_display);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Contains the main content – search, articles list, and summary display
+	// conditionally rendered based on currentTab props
+	var Content = function (_React$Component) {
+	  _inherits(Content, _React$Component);
+
+	  function Content(props) {
+	    _classCallCheck(this, Content);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Content).call(this, props));
+	  }
+
+	  _createClass(Content, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'content' },
+	        this.props.currentTab === 1 ? _react2.default.createElement(_url_search2.default, {
+	          summaryCall: this.props.summaryCall.bind(this)
+	        }) : null,
+	        this.props.currentTab === 2 ? _react2.default.createElement(_articles_list2.default, {
+	          changePocket: this.props.changePocket.bind(this),
+	          pocketIsAuthed: this.props.pocketIsAuthed,
+	          summaryCall: this.props.summaryCall.bind(this),
+	          changeTab: this.props.changeTab
+	        }) : null,
+	        this.props.currentTab === 3 ? _react2.default.createElement(_summary_display2.default, {
+	          title: this.props.title,
+	          dict: this.props.dict,
+	          changeThresh: this.props.changeThresh.bind(this),
+	          threshold: this.props.threshold
+	        }) : null
+	      );
+	    }
+	  }]);
+
+	  return Content;
+	}(_react2.default.Component);
+
+	exports.default = Content;
+	;
+
+/***/ },
+/* 186 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Component that allows you to search and summarize by URL
+	var UrlSearch = function (_React$Component) {
+	  _inherits(UrlSearch, _React$Component);
+
+	  function UrlSearch(props) {
+	    _classCallCheck(this, UrlSearch);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UrlSearch).call(this, props));
+
+	    _this.state = { tempUrl: null };
+	    return _this;
+	  }
+
+	  // Maintains temporary URL storage
+
+
+	  _createClass(UrlSearch, [{
+	    key: "handleSearchChange",
+	    value: function handleSearchChange(e) {
+	      // console.log(e.target.value);
+	      this.setState({ tempUrl: e.target.value });
+	    }
+
+	    // Passes temporary URL state to the summarization AJAX call from its parent
+
+	  }, {
+	    key: "handleSubmit",
+	    value: function handleSubmit(e) {
+	      e.preventDefault();
+	      this.props.summaryCall(this.state.tempUrl);
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        {
+	          className: "search-bar"
+	        },
+	        _react2.default.createElement(
+	          "form",
+	          {
+	            onSubmit: this.handleSubmit.bind(this)
+	          },
+	          _react2.default.createElement(
+	            "label",
+	            null,
+	            "Paste a URL to Summarize:"
+	          ),
+	          _react2.default.createElement("br", null),
+	          _react2.default.createElement("input", {
+	            className: "url-search-form",
+	            type: "text"
+	            // value={} 
+	            , placeholder: "Paste a URL",
+	            onChange: this.handleSearchChange.bind(this)
+	          }),
+	          _react2.default.createElement(
+	            "button",
+	            {
+	              className: "sum-btn"
+	            },
+	            "Summarize"
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return UrlSearch;
+	}(_react2.default.Component);
+
+	exports.default = UrlSearch;
+	;
+
+/***/ },
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(176);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(177);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _pocket_auth = __webpack_require__(188);
+
+	var _pocket_auth2 = _interopRequireDefault(_pocket_auth);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Contains User's Pocket account details, fetches articles, stores and displays them
+	var ArticlesList = function (_React$Component) {
+	  _inherits(ArticlesList, _React$Component);
+
+	  function ArticlesList(props) {
+	    _classCallCheck(this, ArticlesList);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ArticlesList).call(this, props));
+
+	    _this.state = {
+	      articles: [],
+	      waiting: true
+	    };
+	    _this.getArticles = _this.getArticles.bind(_this);
+	    return _this;
+	  }
+
+	  _createClass(ArticlesList, [{
+	    key: 'getArticles',
+	    value: function getArticles() {
+	      var _this2 = this;
+
+	      _jquery2.default.ajax({
+	        url: '/users/articles',
+	        method: 'GET'
+	      }).done(function (articles) {
+	        _this2.setState({
+	          articles: articles,
+	          waiting: false
+	        });
+	      });
+	    }
+
+	    // Grabs the latest pocket articles in the DB and updates the state before render
+
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.getArticles();
+	    }
+
+	    // Calls summarize on the article when the summary button is clicked
+
+	  }, {
+	    key: 'getSummary',
+	    value: function getSummary(url, title) {
+	      console.log(url);
+	      this.props.summaryCall(url, title);
+	    }
+	  }, {
+	    key: 'renderWaitingForArticles',
+	    value: function renderWaitingForArticles() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        'Waiting for articles...'
+	      );
+	    }
+	  }, {
+	    key: 'renderArticles',
+	    value: function renderArticles() {
+	      var _this3 = this;
+
+	      var articles = _underscore2.default.map(this.state.articles, function (article) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'article-container' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'article-info-container' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'article-title' },
+	              article.resolvedTitle
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'article-wordcount' },
+	              'Word Count: ',
+	              article.wordCount
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'article-btn-container' },
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                onClick: function onClick() {
+	                  return _this3.getSummary(article.resolvedUrl, article.resolvedTitle);
+	                },
+	                className: 'article-btn'
+	              },
+	              'Summarize'
+	            )
+	          )
+	        );
+	      });
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'articles-container' },
+	          articles
+	        ),
+	        _react2.default.createElement(_pocket_auth2.default, {
+	          changePocket: this.props.changePocket.bind(this),
+	          pocketIsAuthed: this.props.pocketIsAuthed,
+	          changeTab: this.props.changeTab,
+	          getArticles: this.getArticles
+	        })
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      if (this.state.waiting) {
+	        return this.renderWaitingForArticles();
+	      } else {
+	        return this.renderArticles();
+	      }
+	    }
+	  }]);
+
+	  return ArticlesList;
+	}(_react2.default.Component);
+
+	exports.default = ArticlesList;
+	;
+
+/***/ },
+/* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(176);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Conditionally displays Pocket OAuth or Fetch Articles buttons
+	var PocketAuthBtn = function (_React$Component) {
+	  _inherits(PocketAuthBtn, _React$Component);
+
+	  function PocketAuthBtn(props) {
+	    _classCallCheck(this, PocketAuthBtn);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(PocketAuthBtn).call(this, props));
+	  }
+
+	  // Checks to see if the user is already auth'd with Pocket
+
+
+	  _createClass(PocketAuthBtn, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var _this2 = this;
+
+	      _jquery2.default.ajax({
+	        url: '/users/pocket_auth',
+	        method: 'GET'
+	      }).done(function (val) {
+	        // console.log('componentWillMount pocket check value: ');
+	        // console.log(val);
+	        _this2.props.changePocket(val);
+	      });
+	    }
+
+	    // AJAX call to users controller that queries the Pocket API and grabs a 
+	    // users's latest 30 articles; stores them in the DB
+
+	  }, {
+	    key: 'getPocketArticles',
+	    value: function getPocketArticles() {
+	      var _this3 = this;
+
+	      _jquery2.default.ajax({
+	        url: '/users/pocket_articles',
+	        method: 'GET'
+	      }).done(function () {
+	        console.log('finished grabbing articles');
+	        _this3.props.getArticles();
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      if (this.props.pocketIsAuthed === true) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'fetch-btn' },
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              onClick: this.getPocketArticles.bind(this)
+	            },
+	            'Fetch Pocket Articles'
+	          )
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            'Connect Your Pocket Account:'
+	          ),
+	          _react2.default.createElement(
+	            'a',
+	            { href: './auth/pocket', className: 'button' },
+	            'Connect'
+	          )
+	        );
+	      }
+	    }
+	  }]);
+
+	  return PocketAuthBtn;
+	}(_react2.default.Component);
+
+	exports.default = PocketAuthBtn;
+	;
+
+/***/ },
+/* 189 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _underscore = __webpack_require__(177);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Displays the summarized text, filtered by the slider threshold
+	var SummaryDisplay = function (_React$Component) {
+	  _inherits(SummaryDisplay, _React$Component);
+
+	  function SummaryDisplay(props) {
+	    _classCallCheck(this, SummaryDisplay);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SummaryDisplay).call(this, props));
+
+	    _this.state = { key: [] };
+	    _this.tmp = [];
+	    return _this;
+	  }
+
+	  // Sets the threshold state in parent component as the slider moves
+
+
+	  _createClass(SummaryDisplay, [{
+	    key: 'handleSlider',
+	    value: function handleSlider(e) {
+	      console.log('threshold in child component: ' + e.target.value);
+	      // console.log(this.props);
+	      this.props.changeThresh(e.target.value);
+	    }
+	  }, {
+	    key: 'setKey',
+	    value: function setKey(score) {
+	      return this.state.key.indexOf(score) === -1 ? score : score + Math.random() * 1000;
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      // console.log('this.tmp: ' + this.tmp);
+	      this.setState({ key: this.tmp });
+	    }
+
+	    // Filters the displayed sentences based on the slider threshold number
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var filtered = _underscore2.default.filter(this.props.dict, function (obj) {
+	        return obj['normScore'] <= _this2.props.threshold;
+	      });
+
+	      var sentences = _underscore2.default.map(filtered, function (obj) {
+	        var currentKey = _this2.setKey(obj['score']);
+	        // console.log(currentKey);
+	        _this2.tmp.push(currentKey);
+	        return _react2.default.createElement(
+	          'span',
+	          {
+	            id: obj['score'],
+	            key: obj['score'],
+	            value: obj['normScore'],
+	            className: 'sentence-span'
+	          },
+	          obj['sentence']
+	        );
+	      });
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'summary-container' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'summary-title' },
+	            this.props.title
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'summary-text' },
+	            sentences
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            className: 'slider-container',
+	            id: 'footer'
+	          },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'slider-second-container' },
+	            _react2.default.createElement('input', {
+	              type: 'range',
+	              min: '0.3',
+	              max: '1',
+	              step: '.0001',
+	              onInput: this.handleSlider.bind(this),
+	              className: 'slider'
+	            })
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return SummaryDisplay;
+	}(_react2.default.Component);
+
+	exports.default = SummaryDisplay;
+	;
+
+/***/ },
+/* 190 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.setDictObjs = setDictObjs;
+	exports.createArray = createArray;
+	exports.normalize = normalize;
+
+	var _underscore = __webpack_require__(177);
+
+	var _ = _interopRequireWildcard(_underscore);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	// Converts TF-IDF algorithm output ('sentence': 'score'), to correctly named k:v pairs (uses underscore.js)
+	function setDictObjs(dictionary) {
+	  var tmp = _.mapObject(dictionary, function (val, key) {
+	    return {
+	      'sentence': key,
+	      'score': val
+	    };
+	  });
+	  return tmp;
+	};
+
+	// Creates an array of objects out of a nested object
+	function createArray(dictionary) {
+	  var tmp = [];
+	  _.each(dictionary, function (obj) {
+	    tmp.push(obj);
+	  });
+	  return tmp;
+	};
+
+	// Finds the min and max score of sentences and returns them
+	function minAndMax(dictionary) {
+	  var min = void 0,
+	      max = 0;
+	  max = _.max(dictionary, function (sent) {
+	    return sent.score;
+	  }).score;
+	  min = _.min(dictionary, function (sent) {
+	    return sent.score;
+	  }).score;
+	  return { max: max, min: min };
+	}
+
+	// Normalizes the scores on a scale of 0 to 1 and add it to the object
+	function normalize(dictionary) {
+	  var minMax = minAndMax(dictionary);
+	  var normalized = _.map(dictionary, function (obj) {
+	    var norm = (obj['score'] - minMax.min) / (minMax.max - minMax.min);
+	    var normScore = { 'normScore': norm };
+	    return _.extend(obj, normScore);
+	  });
+	  return normalized;
+	};
+
+/***/ },
+/* 191 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(176);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Signup form
+	var SignupForm = function (_React$Component) {
+	  _inherits(SignupForm, _React$Component);
+
+	  function SignupForm(props) {
+	    _classCallCheck(this, SignupForm);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SignupForm).call(this, props));
+
+	    _this.state = {
+	      username: '',
+	      password: ''
+	    };
+	    return _this;
+	  }
+
+	  // Temporarily stores the form data in state
+
+
+	  _createClass(SignupForm, [{
+	    key: 'handleSignupFormChange',
+	    value: function handleSignupFormChange(setName, e) {
+	      var change = {};
+	      change[setName] = e.target.value;
+	      this.setState(change);
+	    }
+
+	    // Trims inputs and hits signup AJAX method
+
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(e) {
+	      e.preventDefault();
+	      var username = this.state.username.trim();
+	      var password = this.state.password.trim();
+	      this.signupAJAX(username, password);
+	    }
+
+	    // POST request to users controller that creates the user in the DB and then
+	    // hits the auto-authentication method
+
+	  }, {
+	    key: 'signupAJAX',
+	    value: function signupAJAX(username, password) {
+	      var _this2 = this;
+
+	      console.log('sending signup post request');
+	      _jquery2.default.ajax({
+	        url: '/users/register',
+	        method: 'POST',
+	        data: {
+	          username: username,
+	          password: password
+	        },
+	        success: function success(data) {
+	          console.log("A new user signed up!");
+	          console.log(data);
+	          _this2.handleSignupAuthentication(username, password);
+	        },
+	        // }.bind(this),
+	        error: function error(xhr, status, err) {
+	          console.error(status, err.toString());
+	        }
+	        // }.bind(this)
+	      });
+	    }
+
+	    // Auto-authenticates users who sign up
+
+	  }, {
+	    key: 'handleSignupAuthentication',
+	    value: function handleSignupAuthentication(username, password) {
+	      var self = this;
+	      var callback = function callback() {
+	        self.props.changeLogin();
+	      };
+	      _jquery2.default.ajax({
+	        url: '/auth',
+	        method: 'POST',
+	        data: {
+	          username: username,
+	          password: password
+	        },
+	        success: function success(data) {
+	          // console.log('Token acquired.');
+	          // console.log(data);
+	          Cookies.set('jwt_token', data.token);
+	          Cookies.set('userId', data.userId);
+	          callback();
+	        },
+	        // }.bind(this),
+	        error: function error(xhr, status, err) {
+	          console.error(status, err.toString());
+	        }
+	        // }.bind(this)
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'signup-form' },
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          ' Create An Account '
+	        ),
+	        _react2.default.createElement(
+	          'form',
+	          {
+	            onSubmit: this.handleSubmit.bind(this)
+	          },
+	          _react2.default.createElement(
+	            'label',
+	            { htmlFor: 'username' },
+	            'Username:'
+	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('input', {
+	            className: 'username-create',
+	            type: 'text',
+	            onChange: this.handleSignupFormChange.bind(this, 'username')
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            'label',
+	            { htmlFor: 'password' },
+	            'Password:'
+	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('input', {
+	            className: 'password-create',
+	            type: 'password',
+	            onChange: this.handleSignupFormChange.bind(this, 'password')
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('input', {
+	            className: 'signupSubmit',
+	            type: 'submit'
+	          })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return SignupForm;
+	}(_react2.default.Component);
+
+	exports.default = SignupForm;
+
+/***/ },
+/* 192 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(176);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Login form
+	var LoginForm = function (_React$Component) {
+	  _inherits(LoginForm, _React$Component);
+
+	  function LoginForm(props) {
+	    _classCallCheck(this, LoginForm);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LoginForm).call(this, props));
+
+	    _this.state = {
+	      username: '',
+	      password: ''
+	    };
+	    return _this;
+	  }
+
+	  // Stores current login form values in state
+
+
+	  _createClass(LoginForm, [{
+	    key: 'handleLoginFormChange',
+	    value: function handleLoginFormChange(stateName, e) {
+	      var change = {};
+	      change[stateName] = e.target.value;
+	      this.setState(change);
+	    }
+
+	    // Trims the inputs and hits the login AJAX method
+
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(e) {
+	      e.preventDefault();
+	      var username = this.state.username.trim();
+	      var password = this.state.password.trim();
+	      // console.log('username: ' + username);
+	      // console.log('password: ' + password);
+	      this.loginAJAX(username, password);
+	    }
+
+	    // Hits the auth controller and logs the user in
+
+	  }, {
+	    key: 'loginAJAX',
+	    value: function loginAJAX(username, password) {
+	      var _this2 = this;
+
+	      // console.log('login AJAX hit');
+	      // console.log(username);
+	      // console.log(password);
+	      _jquery2.default.ajax({
+	        url: "/auth",
+	        method: "POST",
+	        data: {
+	          username: username,
+	          password: password
+	        },
+	        success: function success(data) {
+	          // console.log('successful login ajax call');
+	          Cookies.set('jwt_token', data.token);
+	          Cookies.set('userId', data.userId);
+	          // console.log(data);
+	          _this2.props.changeLogin(data.token);
+	        },
+	        // }.bind(this),
+	        error: function error(xhr, status, err) {
+	          console.error(status, err.toString());
+	        }
+	        // }.bind(this),
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'login-form' },
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Please Login'
+	        ),
+	        _react2.default.createElement(
+	          'form',
+	          { onSubmit: this.handleSubmit.bind(this) },
+	          _react2.default.createElement(
+	            'label',
+	            { htmlFor: 'username' },
+	            'Username:'
+	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('input', {
+	            className: 'username-login-form',
+	            type: 'text',
+	            value: this.state.username,
+	            onChange: this.handleLoginFormChange.bind(this, 'username')
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            'label',
+	            { htmlFor: 'password' },
+	            'Password:'
+	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('input', {
+	            className: 'password-login-form',
+	            type: 'password',
+	            value: this.state.password,
+	            onChange: this.handleLoginFormChange.bind(this, 'password')
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('input', {
+	            className: 'loginSubmit',
+	            type: 'submit'
+	          })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return LoginForm;
+	}(_react2.default.Component);
+
+	exports.default = LoginForm;
 
 /***/ }
 /******/ ]);

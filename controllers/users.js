@@ -1,12 +1,13 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('../config/passport.js');
-var User = require('../models/users.js');
-var Article = require('../models/articles.js');
-var request = require('request');
-var util = require('util');
-var _ = require('underscore')._;
-var pocketUrl = 'https://getpocket.com/v3/get';
+'use strict';
+const express = require('express');
+const router = express.Router();
+const passport = require('../config/passport.js');
+const User = require('../models/users.js');
+const Article = require('../models/articles.js');
+const request = require('request');
+const util = require('util');
+const _ = require('underscore')._;
+const pocketUrl = 'https://getpocket.com/v3/get';
 
 // Allows for inspection of normally printed [Object: Object]s
 function deepPrint(x){
@@ -15,7 +16,7 @@ function deepPrint(x){
 
 // Creates array of objects from nested objects
 function createArray(object) {
-  var tmp = [];
+  let tmp = [];
   _.each(object, (obj) => {
     tmp.push(obj);
   });
@@ -25,10 +26,10 @@ function createArray(object) {
 // Creates takes in articles object array, instantiates new article objects, 
 // and returns the new array
 function createArticles(articles) {
-  var tmp = [];
+  let tmp = [];
   _.each(articles, (article) => {
     console.log(article);
-    var item = new Article({
+    let item = new Article({
       itemId: article.item_id,
       givenUrl: article.given_url,
       givenTitle: article.given_title,
@@ -77,12 +78,12 @@ router.get('/pocket_auth', (req, res) => {
 // Queries Pocket API for a user's latest 30 articles, and saves them to the DB
 router.get('/pocket_articles', (req, res) => {
   User.findById(req.cookies.userId).then(function(user){
-    var accessToken = user.pocketToken;
+    let accessToken = user.pocketToken;
 
     request(pocketUrl + "?consumer_key=" + process.env.POCKET_KEY + "&access_token=" + accessToken + "&contentType=article&state=unread&count=30", function(error, response, body) {
       if(!error && response.statusCode == 200) {
-        var results = JSON.parse(body);
-        var returnedArticles = createArticles(createArray(results.list));
+        let results = JSON.parse(body);
+        let returnedArticles = createArticles(createArray(results.list));
         User.findOneAndUpdate({_id: req.cookies.userId}, {$set:{articles: returnedArticles}}, function(err, user){
           if(err){
             console.log(err);

@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 // Converts TF-IDF algorithm output ('sentence': 'score'), to correctly named k:v pairs (uses underscore.js)
 export function setDictObjs(dictionary){
