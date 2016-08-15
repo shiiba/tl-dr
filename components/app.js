@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import _ from 'underscore';
 import styles from '../public/css/styles.css';
 import SummarySearch from './summary_search.js';
 import SignupForm from './signup_form.js';

@@ -1,11 +1,12 @@
-var express = require('express');
-var router = express.Router();
-var session = require('express-session');
-var passport = require('../config/passport.js');
-var User = require('../models/users.js');
-var Article = require('../models/articles.js');
-var request = require('request');
-var jwt = require('jsonwebtoken');
+'use strict';
+const express = require('express');
+const router = express.Router();
+const session = require('express-session');
+const passport = require('../config/passport.js');
+const User = require('../models/users.js');
+const Article = require('../models/articles.js');
+const request = require('request');
+const jwt = require('jsonwebtoken');
 
 // Initializes Passport
 router.use(session({ secret: 'SECRET', resave: true, saveUninitialized: true }));
@@ -24,11 +25,11 @@ router.post('/', passport.authenticate('local', { session: false }), (req, res, 
   console.log('req.body: ' + req.body);
   console.log('==========================');
 
-  var token = jwt.sign(req.user, process.env.JWT_SECRET, {
+  let token = jwt.sign(req.user, process.env.JWT_SECRET, {
     expiresIn: 1400
   });
 
-  var userId = req.user._id;
+  let userId = req.user._id;
   console.log('userId: ' + userId);
 
   console.log(token);
